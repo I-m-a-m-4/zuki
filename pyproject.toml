@@ -1,5 +1,5 @@
 [project]
-name = "clacky"
+name = "zuki"
 version = "0.2.0"
 description = "The open-source Windows agent companion — autonomous, but you can take it back."
 readme = "README.md"
@@ -13,10 +13,10 @@ dependencies = []
 claude = ["anthropic>=0.40"]
 openai = ["openai>=1.0"]
 gemini = ["google-generativeai>=0.8"]
-# Opt-in reliable Gmail/Calendar path (see clacky/shell/google_workspace.py).
+# Opt-in reliable Gmail/Calendar path (see zuki/shell/google_workspace.py).
 # Needs a one-time OAuth setup; the browser-driving path works without this.
 google = ["google-api-python-client>=2.0", "google-auth-oauthlib>=1.0"]
-# Background agent harness (see clacky/shell/harness.py): "go research X" tasks
+# Background agent harness (see zuki/shell/harness.py): "go research X" tasks
 # run through hermes-agent and produce real files. Runs on your same Anthropic
 # key. Already included in [shell] — this standalone extra exists for minimal
 # installs that want only the harness.
@@ -24,10 +24,10 @@ background = ["hermes-agent>=0.18; python_version < '3.14'",
               "ddgs; python_version < '3.14'",
               "agent-client-protocol>=0.9; python_version < '3.14'"]
 dev = ["pytest>=8.0"]
-# The companion shell (vendored from Bitshank under clacky/shell/). Core deps to
+# The companion shell (vendored from Bitshank under zuki/shell/). Core deps to
 # launch voice + screen + pointing on the free Ollama path. Premium/optional
 # extras (elevenlabs, tavily, pypdf, pytesseract, …) are listed in
-# clacky/shell/requirements.txt — install only what you need.
+# zuki/shell/requirements.txt — install only what you need.
 shell = [
     "PyQt6>=6.6.0",
     "mss>=9.0.1",
@@ -47,7 +47,7 @@ shell = [
     "pynput>=1.7.7",          # Phase-2 actuation + workflow capture
     # Background agents are on by default: "go research X and tell me later"
     # leaves real files. Hermes doesn't support 3.14 yet — the marker keeps the
-    # install working there (Clacky falls back to spoken research summaries).
+    # install working there (Zuki falls back to spoken research summaries).
     "hermes-agent>=0.18; python_version < '3.14'",
     # Free, keyless web search for those agents (hermes' ddgs provider) —
     # without it research tasks fight search-engine bot walls in a browser.
@@ -58,11 +58,11 @@ shell = [
 ]
 
 [project.scripts]
-clacky = "clacky.cli:main"
+zuki = "zuki.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["clacky", "clacky.agent", "clacky.providers"]
+packages = ["zuki", "zuki.agent", "zuki.providers"]

@@ -1,14 +1,14 @@
 """
-organize_desktop.py — Clicky skill: voice-driven desktop tidying with preview + undo.
+organize_desktop.py — Zuki skill: voice-driven desktop tidying with preview + undo.
 
-Drop in your skills directory (Clicky auto-loads it). Matches phrases like
+Drop in your skills directory (Zuki auto-loads it). Matches phrases like
 "clean up my desktop" / "tidy this up" and "undo that".
 
 The skill is a thin adapter: it routes voice -> the `organizer` package, builds a
 DRY-RUN plan, asks the user to confirm, then executes. No files move without
 confirmation.
 
-NOTE: `manager` is Clicky's CompanionManager. The attribute names below
+NOTE: `manager` is Zuki's CompanionManager. The attribute names below
 (llm.complete, speak, ask_confirm) are placeholders — map them to whatever the
 base actually exposes when you wire it in (M2/M3 in the build plan).
 """
@@ -25,7 +25,7 @@ DESKTOP = Path.home() / "Desktop"
 
 
 def _make_llm_complete(manager):
-    """Adapt Clicky's active LLM provider into the planner's expected callable:
+    """Adapt Zuki's active LLM provider into the planner's expected callable:
     (system, user) -> text. Adjust to the real provider API."""
     def complete(system: str, user: str) -> str:
         # e.g. return manager.llm.complete(system=system, user=user, json_mode=True)
@@ -63,7 +63,7 @@ async def undo_organize(transcript: str, manager) -> str:
     return undo.undo_last()
 
 
-# ---- skill registrations (Clicky's expected format) -----------------------
+# ---- skill registrations (Zuki's expected format) -----------------------
 
 ORGANIZE_SKILL = {
     "name": "organize_desktop",

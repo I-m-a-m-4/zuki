@@ -18,4 +18,4 @@ jobs:
       - name: Run the suite
         run: python -m pytest -q
       - name: Compile the shell (import-safety without a GUI)
-        run: python -m py_compile clacky/shell/companion_manager.py clacky/shell/routing.py clacky/shell/tour.py clacky/shell/actions.py clacky/shell/harness.py clacky/shell/agent_skills.py clacky/shell/memory_store.py clacky/shell/config.py
+        run: python -m py_compile zuki/shell/companion_manager.py zuki/shell/routing.py zuki/shell/tour.py zuki/shell/actions.py zuki/shell/harness.py zuki/shell/agent_skills.py zuki/shell/memory_store.py zuki/shell/config.py

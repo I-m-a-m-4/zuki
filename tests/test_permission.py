@@ -5,7 +5,7 @@ versus what must pause for a confirm. Bias every uncertain case toward
 DANGEROUS.
 """
 
-from clacky.agent.permission import (
+from zuki.agent.permission import (
     Action,
     Risk,
     classify_action,

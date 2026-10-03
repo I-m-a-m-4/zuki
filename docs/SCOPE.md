@@ -1,7 +1,7 @@
-# Clacky — Scope & Design (v3, direct providers)
+# Zuki — Scope & Design (v3, direct providers)
 
 > **⚠️ SUPERSEDED for the current direction — see [`AGENT_PLAN.md`](AGENT_PLAN.md) (v4).**
-> The project is now a proper Windows port of the *computer-acting* Clicky: it
+> The project is now a proper Windows port of the *computer-acting* Zuki: it
 > drives the GUI via Claude's Computer Use tool, with the file-organizer as one
 > safe skill. That brings back an agent loop (observe → decide → act), which the
 > v3 "one structured call" design below deliberately dropped. This file is kept
@@ -10,11 +10,11 @@
 
 > *The open-source Windows agent companion you're waitlisted for — and the one you can actually trust with your files.*
 
-> **⚠️ Architecture update (v3 supersedes the SDK sections below).** Clacky no
+> **⚠️ Architecture update (v3 supersedes the SDK sections below).** Zuki no
 > longer builds on Claude Code / the Claude Agent SDK. Following how the actual
 > Windows base (Bitshank) is built, it now calls **LLM providers directly**
 > (Claude / OpenAI / Gemini / Ollama, plus a zero-config heuristic), with **no
-> agent loop**: the model returns a JSON *plan* in one call and Clacky' own code
+> agent loop**: the model returns a JSON *plan* in one call and Zuki' own code
 > executes it through the safe-file layer. This is simpler, removes the
 > Claude-subscription onboarding wall, restores a free local/offline path, and
 > is *safer* — the model never calls tools or touches the disk, so there is no
@@ -33,11 +33,11 @@
 | **Closed (heyclicky)** | ✅ agent mode shipped | ⏳ **waitlist only** |
 | **Open source** | ✅ openclicky has agent mode | ❌ **empty** — ports are pointing-only |
 
-"Hands" is **not novel** — heyclicky and openclicky both have agentic mode on Mac. The gap is **Windows + agentic + open-source**, and it's empty: official Windows is a waitlist (demand proven), every Windows port (Bitshank/tekram/flicky) is pointing-only. Clacky fills it.
+"Hands" is **not novel** — heyclicky and openclicky both have agentic mode on Mac. The gap is **Windows + agentic + open-source**, and it's empty: official Windows is a waitlist (demand proven), every Windows port (Bitshank/tekram/flicky) is pointing-only. Zuki fills it.
 
 **Two-part wedge (equal weight):**
 1. **Windows-first + open source** — the agent people are waitlisted for, free and now.
-2. **Trust via reversibility, not interruption** — runs autonomously like Clicky, but everything it does is undoable; only irreversible actions pause to confirm. "The autonomous agent you can take back."
+2. **Trust via reversibility, not interruption** — runs autonomously like Zuki, but everything it does is undoable; only irreversible actions pause to confirm. "The autonomous agent you can take back."
 
 ---
 
@@ -49,11 +49,11 @@ openclicky's Agent Mode is **not bespoke**. From its resource pack:
 - **Skills = markdown packs.** ~25 files (`notion.md`, `spotify.md`, `blender.md`, `powerpoint.md`, `github-pr-workflow.md`, …) — domain know-how, not code — plus `skill-suggestion-rules.json` (context → which skill), `SOUL.md` (personality), `OpenClickyModelInstructions.md` (system behavior).
 - **"Money rule":** Agent SDK first (uses the user's already-paid Claude sign-in — free per task); direct API only as fallback (per-token). Local keys, no hosted login.
 
-**We copy all three.** Clacky is *not* a from-scratch agent — building one would be a weaker reinvention of the SDK. Clacky is the **Windows companion + a trust layer on top of the SDK**, with file-organizing as the first skill.
+**We copy all three.** Zuki is *not* a from-scratch agent — building one would be a weaker reinvention of the SDK. Zuki is the **Windows companion + a trust layer on top of the SDK**, with file-organizing as the first skill.
 
 ---
 
-## 3. What Clacky v1 IS / IS NOT
+## 3. What Zuki v1 IS / IS NOT
 
 **IS:** a Windows-native companion shell (voice/screen/overlay, lifted from Bitshank) wrapping the **Claude Agent SDK**, with a **reversible safe-file-ops tool**, a **risk-gating permission hook**, an **undo journal**, and **markdown skills** (the organize-desktop skill + one more, plus a suggestion router).
 
@@ -84,7 +84,7 @@ openclicky's Agent Mode is **not bespoke**. From its resource pack:
                    │ every tool call passes through…
                    ▼
    ┌─────────────────────────────────────────────────────────┐
-   │  CLACKY TRUST LAYER   (yours — the differentiator)        │
+   │  ZUKI TRUST LAYER   (yours — the differentiator)        │
    │  • Safe tools: file ops via a reversible move/rename/    │
    │    create tool (the `organizer` code). Never raw delete. │
    │  • Permission hook (can_use_tool): risk-gate each call.  │
@@ -106,7 +106,7 @@ openclicky's Agent Mode is **not bespoke**. From its resource pack:
 
 The agent is powerful but must not be trusted with raw destructive operations. So:
 
-1. **Constrain the toolset.** Don't expose raw shell `rm`/`mv` to the agent. File mutation happens only through a Clacky-provided tool whose implementation is the tested `organizer` code — move/rename/create, journaled, never destructive.
+1. **Constrain the toolset.** Don't expose raw shell `rm`/`mv` to the agent. File mutation happens only through a Zuki-provided tool whose implementation is the tested `organizer` code — move/rename/create, journaled, never destructive.
 2. **`can_use_tool` permission hook = the safety brain.** Every tool call the SDK wants to make is classified:
    - `SAFE` (read, screenshot, search) → run.
    - `REVERSIBLE` (move/rename a file) → run + append to the undo journal.
@@ -146,7 +146,7 @@ The pure logic and tests survive; what changes is *who decides what to do* — t
 ## 6. Repo structure (v2 target)
 
 ```
-clacky/
+zuki/
   shell/            # companion: voice, screen, overlay, tray (from Bitshank, rebranded)
   agent/
     runtime.py      # Claude Agent SDK setup; money-rule routing (SDK first, API fallback)
@@ -170,7 +170,7 @@ docs/               # SCOPE.md, BUILD_PLAN.md
 
 ## 7. Milestones (revised for SDK)
 
-- **M0** — Stand up the companion shell on Windows (Bitshank base, rebranded Clacky). Voice → screen → overlay working.
+- **M0** — Stand up the companion shell on Windows (Bitshank base, rebranded Zuki). Voice → screen → overlay working.
 - **M1** — Safe file-ops + undo core ✅ *(done — becomes the safe tool + journal).*
 - **M1.5 (the keystone)** — Integrate the Claude Agent SDK. Expose `safe_fs` as its only file-mutation tool. Implement `can_use_tool` (autonomous + risk gate). Ship `organize-desktop.md`. Drive by **text/CLI** first. Goal: "tidy my desktop" runs autonomously through the *real agent*, fully undoable, with deletes blocked. **This proves the whole thesis.**
 - **M2** — Wire into the shell: voice → agent → spoken result + undo.
@@ -185,7 +185,7 @@ docs/               # SCOPE.md, BUILD_PLAN.md
 
 Principle: **autonomous by default, reversible always, interrupt only when it can't be taken back.**
 
-1. **Undo is the hero, not confirmation.** Runs like Clicky; every `REVERSIBLE` tool call is journaled; one word reverses the batch, across restarts.
+1. **Undo is the hero, not confirmation.** Runs like Zuki; every `REVERSIBLE` tool call is journaled; one word reverses the batch, across restarts.
 2. **Confirmation is the rare exception** — only `DANGEROUS`/irreversible calls pause.
 3. **The agent can't reach destructive ops** — toolset is constrained to the safe layer; raw shell/delete isn't exposed. Defense in depth with the permission hook.
 4. **Policy is non-bypassable** — home-only roots, protected-path denylist, sensitive-file skip, batch caps, reuse Privacy-Guard for sensitive windows.

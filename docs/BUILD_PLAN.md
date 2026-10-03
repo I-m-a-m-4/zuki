@@ -1,40 +1,40 @@
-# Clacky — Windows build plan (v3)
+# Zuki — Windows build plan (v3)
 
-**The project:** Clacky is a self-contained, **installable Windows app** — a screen companion that sees your screen, talks with you, points at things, and (the part nobody else has) **actually acts**: you say "clean this up" and it safely organizes your desktop, previewing every move and letting you undo.
+**The project:** Zuki is a self-contained, **installable Windows app** — a screen companion that sees your screen, talks with you, points at things, and (the part nobody else has) **actually acts**: you say "clean this up" and it safely organizes your desktop, previewing every move and letting you undo.
 
-**The positioning:** *Clicky on Windows — and it has hands.* The Windows version is the demand-driven hook; the hands are the reason to download Clacky instead of the obscure community ports.
+**The positioning:** *Zuki on Windows — and it has hands.* The Windows version is the demand-driven hook; the hands are the reason to download Zuki instead of the obscure community ports.
 
-**The one-liner (for the launch post):** *"Clicky finally works on Windows — and I gave it hands. Say 'clean this up' and watch it tidy your desktop, safely."*
+**The one-liner (for the launch post):** *"Zuki finally works on Windows — and I gave it hands. Say 'clean this up' and watch it tidy your desktop, safely."*
 
-**Why it's a real project, not a clone:** Every existing Clicky — the Mac original and all the Windows ports — is a *guide*: it sees the screen and points, but never takes an action. Clacky adds a content-aware, safety-gated action layer (move files with reasoning, preview, and undo) — a capability class none of them have.
+**Why it's a real project, not a clone:** Every existing Zuki — the Mac original and all the Windows ports — is a *guide*: it sees the screen and points, but never takes an action. Zuki adds a content-aware, safety-gated action layer (move files with reasoning, preview, and undo) — a capability class none of them have.
 
 ---
 
 ## Strategic read (why this works)
 
-The Windows-port space has 3+ community builds (`tekram`, `Bitshank`, `pango07/flicky`) and they're all obscure — Bitshank's is genuinely feature-rich and has ~1 star. The original got 5k stars from one viral tweet. **Conclusion: the bottleneck for a popular Windows Clicky is distribution, not code.** The "popular Windows version" slot is empty because none of the builders marketed it.
+The Windows-port space has 3+ community builds (`tekram`, `Bitshank`, `pango07/flicky`) and they're all obscure — Bitshank's is genuinely feature-rich and has ~1 star. The original got 5k stars from one viral tweet. **Conclusion: the bottleneck for a popular Windows Zuki is distribution, not code.** The "popular Windows version" slot is empty because none of the builders marketed it.
 
 That's the opening. With an audience, you can take that slot *and* differentiate with a feature none of them have. Two distribution moments from one project:
 
-1. **Launch post** — "Clicky on Windows, with hands." Rides existing demand (instantly understandable, no explanation needed) and leads with novelty.
+1. **Launch post** — "Zuki on Windows, with hands." Rides existing demand (instantly understandable, no explanation needed) and leads with novelty.
 2. **Hands demo** — the voice-driven desktop tidy as its own clip. Differentiated, shareable content.
 
 **On Farza-risk (official Windows version):** it's a timing bet you win by moving now, before any official build. And since the goal is a showcase, the engagement is banked even if official ships later — plus "+ hands" still differentiates from official. Move now.
 
 ---
 
-## What Clacky is (and isn't)
+## What Zuki is (and isn't)
 
 - **Is:** your own independent, branded, installable Windows app. One download, runs, works.
-- **Isn't:** a fork, a PR to anyone's repo, or an add-on skill that needs someone else's app installed first. For a showcase, "download Clacky, watch it work" beats "install this other person's app, then drop my file in." Bundle everything into Clacky.
+- **Isn't:** a fork, a PR to anyone's repo, or an add-on skill that needs someone else's app installed first. For a showcase, "download Zuki, watch it work" beats "install this other person's app, then drop my file in." Bundle everything into Zuki.
 
-You still *lift* plumbing from the MIT sources — you just ship it as Clacky.
+You still *lift* plumbing from the MIT sources — you just ship it as Zuki.
 
 ---
 
 ## Repo landscape (live, all MIT-licensed)
 
-| Repo | Stack | Role for Clacky |
+| Repo | Stack | Role for Zuki |
 |---|---|---|
 | `farzaa/clicky` | Swift / SwiftUI (macOS) | Reference — POINT protocol, proxy-worker pattern, personality |
 | `tekram/clicky-windows` | Electron / TypeScript | Reference — clean pluggable-services design |
@@ -81,7 +81,7 @@ Baseline safety in `guards.py`: protected-path denylist, batch cap, **move-only*
 
 ## Milestone order
 
-**M0 — Stand up *your* app (≈1–2 days).** Bring the Bitshank base into the Clacky repo (lift under MIT, keep notices), rebrand it Clacky, get it running: `python main.py`, confirm voice → screen → pointing. Develop against local Ollama to keep iteration free; use Claude for demo-quality.
+**M0 — Stand up *your* app (≈1–2 days).** Bring the Bitshank base into the Zuki repo (lift under MIT, keep notices), rebrand it Zuki, get it running: `python main.py`, confirm voice → screen → pointing. Develop against local Ollama to keep iteration free; use Claude for demo-quality.
 
 **M1 — Hands core, headless ✅ (done — this repo).** `planner` + `executor` + `undo` + `guards` with passing tests. The part that's genuinely yours. Build solid, no UI.
 
@@ -102,7 +102,7 @@ Ship the working demo after M3. M5/M6 are what convert it from a portfolio repo 
 ## The demo (the asset that earns engagement)
 
 - 30–60s recording of your *actual* cluttered desktop. Real > staged.
-- Hold the hotkey: "clean this up." Cursor sweeps the mess, Clacky narrates what it found, shows the plan, you say "go," files animate into folders. End on a clean desktop + "say undo to reverse."
+- Hold the hotkey: "clean this up." Cursor sweeps the mess, Zuki narrates what it found, shows the plan, you say "go," files animate into folders. End on a clean desktop + "say undo to reverse."
 - Before/after is the hook.
 - Pair with a short writeup of the *interesting* engineering: the guide-vs-act decision, dry-run/undo safety, content-aware reasoning.
 
@@ -110,13 +110,13 @@ Ship the working demo after M3. M5/M6 are what convert it from a portfolio repo 
 
 ## Ownership & attribution (decided)
 
-Clacky is **your own independent project** — not a fork, not a PR. MIT permits lifting code into a new project as long as you:
+Zuki is **your own independent project** — not a fork, not a PR. MIT permits lifting code into a new project as long as you:
 
 - Keep the original **MIT LICENSE** text + copyright lines for reused code.
 - Credit **farzaa** (original concept) and **Bitshank** (the Windows base) in the README.
-- Give it its own name/identity (done: Clacky) so it reads as your product.
+- Give it its own name/identity (done: Zuki) so it reads as your product.
 
-Narrative: *"I built Clacky — the Windows version of the cursor companion, and I gave it hands,"* with a credits line. Not "I forked Clicky."
+Narrative: *"I built Zuki — the Windows version of the cursor companion, and I gave it hands,"* with a credits line. Not "I forked Zuki."
 
 ---
 
@@ -132,4 +132,4 @@ Narrative: *"I built Clacky — the Windows version of the cursor companion, and
 
 ## The framing that makes it land
 
-Lead with demand, differentiate with novelty: *"Clicky on Windows — and it has hands."* The Windows version gets people in the door (the demand already exists); the safe, reasoning-driven action layer is why they download **Clacky** specifically and the part that shows you can design a feature, not just follow a tutorial.
+Lead with demand, differentiate with novelty: *"Zuki on Windows — and it has hands."* The Windows version gets people in the door (the demand already exists); the safe, reasoning-driven action layer is why they download **Zuki** specifically and the part that shows you can design a feature, not just follow a tutorial.

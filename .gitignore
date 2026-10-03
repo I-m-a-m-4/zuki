@@ -12,8 +12,8 @@ venv/
 *.env.local
 .dev.vars
 
-# Clacky runtime / build artifacts
-~/.clacky/
+# Zuki runtime / build artifacts
+~/.zuki/
 build/
 dist/
 *.spec.bak

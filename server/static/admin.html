@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Zuki — Admin</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --panel: #141821;
+    --panel-2: #1a2030;
+    --line: #252c3d;
+    --text: #e8ecf4;
+    --muted: #8b93a7;
+    --accent: #7c6cff;
+    --accent-2: #a99bff;
+    --danger: #ff5c6c;
+    --ok: #3ddc97;
+    --warn: #ffc555;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: .2px; }
+  h1 span { color: var(--accent-2); }
+  .sub { color: var(--muted); margin-top: 4px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .spread { justify-content: space-between; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 18px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 14px; font-weight: 600; }
+
+  #signin { max-width: 380px; margin: 8vh auto 0; }
+  #signin .field { margin-bottom: 12px; }
+  label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+  input[type=email], input[type=password], input[type=number] {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-size: 14px;
+    outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { filter: brightness(1.1); }
+  button:disabled { opacity: .5; cursor: default; filter: none; }
+  button.ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  button.ghost:hover { color: var(--text); border-color: var(--accent); filter: none; }
+  button.danger { background: transparent; color: var(--danger); border: 1px solid #4a2530; }
+  button.danger:hover { border-color: var(--danger); filter: none; }
+  button.ok { background: transparent; color: var(--ok); border: 1px solid #1f4a38; }
+  button.ok:hover { border-color: var(--ok); filter: none; }
+  button.sm { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
+
+  #msg { margin-top: 12px; font-size: 13px; min-height: 18px; }
+  #msg.err { color: var(--danger); }
+  #msg.info { color: var(--muted); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .stat .n { font-size: 22px; font-weight: 700; }
+  .stat .l { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
+  td { font-size: 13px; }
+  tr.disabled td { opacity: .45; }
+  td.email { font-weight: 600; }
+  td .uid { color: var(--muted); font-size: 11px; margin-top: 1px; word-break: break-all; }
+  .num { font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .pill.on { background: #16362a; color: var(--ok); }
+  .pill.off { background: #3a1c24; color: var(--danger); }
+  .limitbox { display: flex; gap: 6px; align-items: center; }
+  .limitbox input { width: 88px; padding: 5px 8px; font-size: 12.5px; }
+  .hint { color: var(--muted); font-size: 11.5px; }
+  .hidden { display: none !important; }
+  .footer { color: var(--muted); font-size: 12px; margin-top: 26px; text-align: center; }
+  a { color: var(--accent-2); }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .tblwrap { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Sign-in -->
+  <div id="signin" class="card">
+    <h1>Zuki <span>Admin</span></h1>
+    <p class="sub">Sign in with your admin Firebase account.</p>
+    <div class="field" style="margin-top:16px">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" />
+    </div>
+    <button id="signinBtn" style="width:100%">Sign in</button>
+    <div id="msg" class="err"></div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dash" class="hidden">
+    <div class="row spread">
+      <div>
+        <h1>Zuki <span>Admin</span></h1>
+        <div class="sub" id="whoami"></div>
+      </div>
+      <div class="row">
+        <button class="ghost sm" id="refreshBtn">Refresh</button>
+        <button class="ghost sm" id="signoutBtn">Sign out</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n num" id="statUsers">–</div><div class="l">Accounts</div></div>
+      <div class="stat"><div class="n num" id="statActive">–</div><div class="l">Active today</div></div>
+      <div class="stat"><div class="n num" id="statRequests">–</div><div class="l">Requests today</div></div>
+      <div class="stat"><div class="n num" id="statTokens">–</div><div class="l">Tokens today</div></div>
+    </div>
+
+    <div class="card">
+      <div class="row spread" style="margin-bottom:10px">
+        <h2 style="margin:0">Users</h2>
+        <input id="search" type="text" placeholder="Filter by email or name…"
+               style="max-width:260px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 10px;font-size:13px;outline:none" />
+      </div>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th class="num">Today</th>
+              <th class="num">All time</th>
+              <th>Daily limit</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="empty" class="hint hidden" style="padding:14px 4px">No accounts yet — they appear the first time someone signs in.</div>
+      <div id="msg2" class="err" style="margin-top:10px"></div>
+    </div>
+
+    <div class="footer">Zuki account server · <a href="/health">/health</a></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+  signOut, setPersistence, browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+// Public web config (safe to ship — project zuki-ai).
+const firebaseConfig = {
+  apiKey: "AIzaSyDr8oY1COiTI09LOMYKERYrtZA6nm6cfq0",
+  authDomain: "zuki-ai.firebaseapp.com",
+  projectId: "zuki-ai",
+  storageBucket: "zuki-ai.firebasestorage.app",
+  messagingSenderId: "424405499907",
+  appId: "1:424405499907:web:492f2f6d8935da88c74e36",
+};
+
+const auth = getAuth(initializeApp(firebaseConfig));
+
+const $ = (id) => document.getElementById(id);
+const signinC = $("signin"), dashC = $("dash"), msg = $("msg"), msg2 = $("msg2");
+const tbody = $("tbody"), emptyEl = $("empty");
+
+let users = [];
+
+function setMsg(el, text, cls) {
+  el.textContent = text || "";
+  el.className = cls || "";
+}
+
+function friendly(err) {
+  const code = (err && err.code) || "";
+  const map = {
+    "auth/invalid-credential": "Wrong email or password.",
+    "auth/invalid-email": "Enter a valid email address.",
+    "auth/user-disabled": "This account has been disabled.",
+    "auth/too-many-requests": "Too many attempts — try again in a few minutes.",
+    "auth/network-request-failed": "Network error — check your connection.",
+    "auth/configuration-not-found": "Email sign-in isn't enabled in the Firebase console yet.",
+  };
+  return map[code] || (err && err.message) || "Something went wrong.";
+}
+
+async function api(path, opts) {
+  const token = await auth.currentUser.getIdToken();
+  const res = await fetch(path, {
+    ...(opts || {}),
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json",
+      ...((opts && opts.headers) || {}),
+    },
+  });
+  if (!res.ok) {
+    let detail = res.status + " " + res.statusText;
+    try {
+      const j = await res.json();
+      if (j && j.error && j.error.message) detail = j.error.message;
+    } catch (_) {}
+    const e = new Error(detail);
+    e.status = res.status;
+    throw e;
+  }
+  return res.json();
+}
+
+function fmt(n) { return (n ?? 0).toLocaleString(); }
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+async function loadUsers() {
+  setMsg(msg2, "Loading…", "info");
+  try {
+    const data = await api("/admin/users");
+    users = data.users || [];
+    setMsg(msg2, "", "");
+    render();
+  } catch (e) {
+    setMsg(msg2, e.message, "err");
+  }
+}
+
+function render() {
+  const q = $("search").value.trim().toLowerCase();
+  const shown = q
+    ? users.filter(u => (u.email || "").toLowerCase().includes(q) ||
+                        (u.name || "").toLowerCase().includes(q))
+    : users;
+
+  tbody.replaceChildren();
+  emptyEl.classList.toggle("hidden", shown.length > 0);
+
+  let active = 0, reqs = 0, tokens = 0;
+  for (const u of users) {
+    if (u.requests_today > 0) active++;
+    reqs += u.requests_today || 0;
+    tokens += (u.input_tokens_today || 0) + (u.output_tokens_today || 0);
+  }
+  $("statUsers").textContent = fmt(users.length);
+  $("statActive").textContent = fmt(active);
+  $("statRequests").textContent = fmt(reqs);
+  $("statTokens").textContent = fmt(tokens);
+
+  for (const u of shown) {
+    const tr = el("tr", u.disabled ? "disabled" : "");
+
+    const tdAcct = el("td", "email");
+    tdAcct.append(el("div", null, u.name || u.email));
+    tdAcct.append(el("div", "uid", u.email + (u.name ? " · " : "") + u.uid));
+    tdAcct.append(el("div", "hint", "Joined " + (u.created_at || "?").slice(0, 10) +
+      " · last seen " + (u.last_seen || "?").slice(0, 16).replace("T", " ")));
+    tr.append(tdAcct);
+
+    const tdToday = el("td", "num");
+    tdToday.append(el("div", null, fmt(u.requests_today) + " req"));
+    tdToday.append(el("div", "hint", fmt((u.input_tokens_today || 0) + (u.output_tokens_today || 0)) + " tok"));
+    tr.append(tdToday);
+
+    const tdAll = el("td", "num");
+    tdAll.append(el("div", null, fmt(u.requests_total) + " req"));
+    tdAll.append(el("div", "hint", fmt(u.tokens_total) + " tok"));
+    tr.append(tdAll);
+
+    const tdLimit = el("td");
+    const box = el("div", "limitbox");
+    const inp = document.createElement("input");
+    inp.type = "number";
+    inp.min = "0";
+    inp.placeholder = "default";
+    inp.value = u.daily_request_limit == null ? "" : String(u.daily_request_limit);
+    const save = el("button", "ghost sm", "Save");
+    save.onclick = async () => {
+      const raw = inp.value.trim();
+      const value = raw === "" ? null : Math.max(0, parseInt(raw, 10));
+      if (raw !== "" && Number.isNaN(value)) { setMsg(msg2, "Enter a number.", "err"); return; }
+      try {
+        await api("/admin/users/" + encodeURIComponent(u.uid) + "/limit", {
+          method: "POST",
+          body: JSON.stringify({ daily_request_limit: value }),
+        });
+        u.daily_request_limit = value;
+        setMsg(msg2, "Saved limit for " + u.email + ".", "info");
+      } catch (e) { setMsg(msg2, e.message, "err"); }
+    };
+    box.append(inp, save);
+    tdLimit.append(box);
+    tdLimit.append(el("div", "hint", "blank = server default"));
+    tr.append(tdLimit);
+
+    const tdStatus = el("td");
+    tdStatus.append(el("span", "pill " + (u.disabled ? "off" : "on"), u.disabled ? "disabled" : "active"));
+    tr.append(tdStatus);
+
+    const tdAct = el("td");
+    const toggle = el("button", u.disabled ? "ok sm" : "danger sm", u.disabled ? "Enable" : "Disable");
+    toggle.onclick = async () => {
+      toggle.disabled = true;
+      try {
+        await api("/admin/users/" + encodeURIComponent(u.uid) + "/disable", {
+          method: "POST",
+          body: JSON.stringify({ disabled: !u.disabled }),
+        });
+        u.disabled = !u.disabled;
+        render();
+      } catch (e) { setMsg(msg2, e.message, "err"); }
+      finally { toggle.disabled = false; }
+    };
+    tdAct.append(toggle);
+    tr.append(tdAct);
+
+    tbody.append(tr);
+  }
+}
+
+$("search").addEventListener("input", render);
+$("refreshBtn").onclick = loadUsers;
+
+$("signinBtn").onclick = async () => {
+  setMsg(msg, "");
+  $("signinBtn").disabled = true;
+  try {
+    await setPersistence(auth, browserSessionPersistence);
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
+  } catch (e) {
+    setMsg(msg, friendly(e), "err");
+  } finally {
+    $("signinBtn").disabled = false;
+  }
+};
+$("password").addEventListener("keydown", (e) => { if (e.key === "Enter") $("signinBtn").click(); });
+
+$("signoutBtn").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    dashC.classList.add("hidden");
+    signinC.classList.remove("hidden");
+    return;
+  }
+  try {
+    const me = await api("/auth/me");
+    if (!me.is_admin) {
+      setMsg(msg, "This account (" + (me.email || user.email) +
+        ") is not an admin. Add it to ADMIN_EMAILS on the server.", "err");
+      await signOut(auth);
+      return;
+    }
+    signinC.classList.add("hidden");
+    dashC.classList.remove("hidden");
+    $("whoami").textContent = (me.name || me.email) + " · " + me.email +
+      " · today " + fmt(me.usage_today && me.usage_today.requests) + " requests";
+    await loadUsers();
+  } catch (e) {
+    setMsg(msg, e.message, "err");
+  }
+});
+</script>
+</body>
+</html>

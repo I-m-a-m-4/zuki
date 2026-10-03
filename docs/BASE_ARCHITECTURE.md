@@ -1,6 +1,6 @@
 # Base architecture — `Bitshank-2338/clicky-windows`
 
-Reference notes on the companion shell Clacky lifts from (Python 3.11+ / PyQt6, MIT). Read this before M0/M1.5 — it marks the exact seam where the Claude Agent SDK replaces the base's one-shot LLM call.
+Reference notes on the companion shell Zuki lifts from (Python 3.11+ / PyQt6, MIT). Read this before M0/M1.5 — it marks the exact seam where the Claude Agent SDK replaces the base's one-shot LLM call.
 
 > Source reviewed: `main.py`, `companion_manager.py` (the brain). Other modules (`ui/`, `audio/`, `ai/`, `screen/`, `tutor_features/`, `skills/`) referenced from imports.
 
@@ -73,11 +73,11 @@ Switching provider nulls the cached instance so it re-inits on next call. Ollama
 
 ---
 
-## 6. ⭐ The seam where Clacky changes it
+## 6. ⭐ The seam where Zuki changes it
 
 **The base is a one-shot pipeline: one utterance → one screenshot → one LLM reply → speak.** No agent loop, no tool-use cycle, no background autonomy. The "skills" are regex→handler one-shots.
 
-Clacky becomes agentic with a **surgical swap at step 6**, keeping everything else:
+Zuki becomes agentic with a **surgical swap at step 6**, keeping everything else:
 
 ```
  KEEP (lift as-is):                          REPLACE:
@@ -88,7 +88,7 @@ Clacky becomes agentic with a **surgical swap at step 6**, keeping everything el
    step  9    TTS + state machine           │ Claude Agent SDK session      │
    tray, hotkeys, providers, privacy guard, │  • loops + calls tools        │
    sleep watchdog, signal architecture      │  • tools constrained to       │
-                                            │    Clacky safe_fs (reversible) │
+                                            │    Zuki safe_fs (reversible) │
                                             │  • can_use_tool permission    │
                                             │    hook = risk gate + journal │
                                             └──────────────────────────────┘
@@ -97,7 +97,7 @@ Clacky becomes agentic with a **surgical swap at step 6**, keeping everything el
 Concretely:
 - **Step 3's skill match** stays as a fast path for trivial commands, but agentic requests route into the SDK session instead of the single LLM call.
 - **Step 6** (`async for chunk in self._get_llm().stream_response(...)`) is replaced by an SDK agent run. The agent's text still streams to the panel; it can still emit POINT tags for narration (step 7 is unchanged), but now it can also **call tools across multiple turns**.
-- **Tool calls pass through Clacky' `can_use_tool` permission hook** (see `SCOPE.md` §4.1): SAFE/REVERSIBLE run autonomously + journal; DANGEROUS confirm. File mutations only go through `safe_fs` (the tested `organizer` code), never raw shell.
+- **Tool calls pass through Zuki' `can_use_tool` permission hook** (see `SCOPE.md` §4.1): SAFE/REVERSIBLE run autonomously + journal; DANGEROUS confirm. File mutations only go through `safe_fs` (the tested `organizer` code), never raw shell.
 - **The "money rule":** the SDK uses the local Claude sign-in first (free per task), direct API as fallback.
 
 Everything in the KEEP column is reusable plumbing — well-built, with graceful fallbacks, DPI/multi-monitor handling, and clean signal decoupling. The agentic upgrade is one seam, not a rewrite.
@@ -106,7 +106,7 @@ Everything in the KEEP column is reusable plumbing — well-built, with graceful
 
 ## 7. Things to watch when lifting
 
-- **Rebrand:** strings, `setApplicationName("Clicky")`, `%LOCALAPPDATA%\Clicky` paths, tray copy → Clacky.
-- **The skills system here is regex→handler**, not markdown. Clacky moves to SDK markdown skills (per SCOPE §4.2); the base's `skills_pkg` becomes the *fast-path command* matcher, not the agent's skill source.
+- **Rebrand:** strings, `setApplicationName("Zuki")`, `%LOCALAPPDATA%\Zuki` paths, tray copy → Zuki.
+- **The skills system here is regex→handler**, not markdown. Zuki moves to SDK markdown skills (per SCOPE §4.2); the base's `skills_pkg` becomes the *fast-path command* matcher, not the agent's skill source.
 - **Don't expose the base's provider `stream_response` as the agent path** — that's the one-shot call you're replacing. Keep it only if you want a non-agentic "quick answer" mode alongside Agent Mode.
 - **Privacy Guard + sensitive-window skip** should also gate what the *agent* can see — reuse it on the SDK path.

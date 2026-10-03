@@ -1,7 +1,7 @@
-# Clacky — Agent Plan (v4): the computer-acting Windows port
+# Zuki — Agent Plan (v4): the computer-acting Windows port
 
-**Decision (supersedes the v3 "direct-provider planner" design):** Clacky is a
-proper Windows port of the *agent-mode* Clicky — a screen companion that sees,
+**Decision (supersedes the v3 "direct-provider planner" design):** Zuki is a
+proper Windows port of the *agent-mode* Zuki — a screen companion that sees,
 talks, points, **and acts on the computer** by driving the GUI via Claude's
 Computer Use tool. The files-organizer becomes one safe skill inside it, not
 the product.
@@ -23,7 +23,7 @@ pointing engine into acting.
 The base is a tray app with a signal-wired brain; it's a *guide* (points, never
 acts). We keep all its plumbing and replace exactly one call.
 
-| Base file (Bitshank) | What it gives us | Clacky use |
+| Base file (Bitshank) | What it gives us | Zuki use |
 |---|---|---|
 | `companion_manager.py` `_end_capture_and_process` (~L496) | the core utterance→reply loop | host for the agent loop |
 | `companion_manager.py` `stream_response(...)` (~L731, L1024) | **the one-shot LLM call** | **← replace with the agent loop** |
@@ -34,7 +34,7 @@ acts). We keep all its plumbing and replace exactly one call.
 | `ai/hybrid_pointer.py` `find_target() → Target(x,y,bbox,label,source)` | **Windows UIA** tree walk, logical px, pixel-perfect | **two uses:** actuation targeting **and** the trust classifier's element inspection |
 | `ai/element_locator.py` (beta `computer-use-2025-11-24`) | already calls Claude Computer Use to *locate* | **extend "locate" → "act"** |
 | `screen/capture.py` | multi-monitor screenshots | the loop's observe step |
-| `clicky.spec` / `installer.iss` / `build.bat` | PyInstaller + Inno Setup packaging | Phase 5, inherited |
+| `zuki.spec` / `installer.iss` / `build.bat` | PyInstaller + Inno Setup packaging | Phase 5, inherited |
 
 **Why this is one seam, not a rewrite:** voice, screen capture, the
 UIA/pointing engine, DPI/multi-monitor correctness, tray, and `.exe` packaging
@@ -53,14 +53,14 @@ shell (Bitshank)  ──screenshot+transcript──▶  AGENT BRAIN (Claude Comp
         └────────────────────────  ACTUATION (Win32 SendInput, logical px)
 ```
 
-Clacky-side modules (this repo):
+Zuki-side modules (this repo):
 
 | Module | Status |
 |---|---|
-| `clacky/agent/permission.py` — `classify_action(Action) → Risk` | **built + unit-tested** (the safety-critical core) |
-| `clacky/agent/computer_loop.py` — `ComputerAgent` (gate + dispatch) | scaffold; gate path tested headlessly |
-| `clacky/agent/actuation.py` — `Actuator` / `WindowsActuator` / `RecordingActuator` | scaffold; recording backend tested |
-| `clacky/agent/{fileops,journal,planner}.py`, `providers/`, `heuristic` | **intact** — become the files skill + its real undo |
+| `zuki/agent/permission.py` — `classify_action(Action) → Risk` | **built + unit-tested** (the safety-critical core) |
+| `zuki/agent/computer_loop.py` — `ComputerAgent` (gate + dispatch) | scaffold; gate path tested headlessly |
+| `zuki/agent/actuation.py` — `Actuator` / `WindowsActuator` / `RecordingActuator` | scaffold; recording backend tested |
+| `zuki/agent/{fileops,journal,planner}.py`, `providers/`, `heuristic` | **intact** — become the files skill + its real undo |
 | `organizer/`, `agent/sdk_tools.py` | dead, left as-is |
 
 Tests: `tests/test_permission.py`, `tests/test_computer_loop.py` (11 passing).
@@ -111,7 +111,7 @@ pauses on anything it can't take back," not fake undo on GUI actions.
 ## 5. Build order
 
 - **Phase 1 — stand up the shell (the M0 that was skipped).** Lift Bitshank
-  into the repo as Clacky, rebrand (`Clicky`→`Clacky`, `%LOCALAPPDATA%\Clicky`,
+  into the repo as Zuki, rebrand (`Zuki`→`Zuki`, `%LOCALAPPDATA%\Zuki`,
   tray copy), get voice → screen → pointing running.
 - **Phase 2 — pointing → acting.** Implement `WindowsActuator` (SendInput,
   reuse Bitshank coords) and `ComputerAgent.run` (Anthropic Computer Use loop).

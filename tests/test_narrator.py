@@ -6,8 +6,8 @@ each step through the gate, in order, and stops on finish. No Anthropic, no GUI.
 
 import asyncio
 
-from clacky.agent.narrator import run_narration
-from clacky.agent.permission import Action, Risk, classify_action
+from zuki.agent.narrator import run_narration
+from zuki.agent.permission import Action, Risk, classify_action
 
 
 def _run(coro):
