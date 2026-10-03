@@ -34,7 +34,9 @@ DEFAULT_SERVER_URL = "http://127.0.0.1:8787"
 class Config:
     # LLM
     anthropic_api_key: Optional[str] = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY") or None)
-    openai_api_key: Optional[str] = field(default_factory=lambda: os.getenv("OPENAI_API_KEY") or None)
+    openai_api_key: Optional[str] = field(default_factory=lambda: os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY") or None)
+    openai_base_url: Optional[str] = field(default_factory=lambda: os.getenv("OPENAI_BASE_URL") or ("https://openrouter.ai/api/v1" if os.getenv("OPENROUTER_API_KEY") else None))
+    openai_model: str = field(default_factory=lambda: os.getenv("OPENAI_MODEL") or os.getenv("OPENROUTER_MODEL") or ("openrouter/free" if os.getenv("OPENROUTER_API_KEY") else "gpt-4o"))
     google_api_key: Optional[str] = field(default_factory=lambda: os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or None)
     ollama_host: str = field(default_factory=lambda: os.getenv("OLLAMA_HOST", "http://localhost:11434"))
     # Legacy single-model knob — still respected as a fallback for both slots

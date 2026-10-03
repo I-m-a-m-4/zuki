@@ -12,7 +12,15 @@ MAX_TOKENS = 1024
 class OpenAIProvider(BaseLLMProvider):
 
     def __init__(self):
-        self._client = AsyncOpenAI(api_key=cfg.openai_api_key)
+        kwargs = {"api_key": cfg.openai_api_key}
+        if cfg.openai_base_url:
+            kwargs["base_url"] = cfg.openai_base_url
+            if "openrouter" in cfg.openai_base_url:
+                kwargs["default_headers"] = {
+                    "HTTP-Referer": "https://zuki.ai",
+                    "X-Title": "Zuki",
+                }
+        self._client = AsyncOpenAI(**kwargs)
 
     async def stream_response(
         self,
@@ -22,21 +30,24 @@ class OpenAIProvider(BaseLLMProvider):
         system_prompt: str,
         model: str | None = None,
     ) -> AsyncIterator[str]:
-        model = model or DEFAULT_MODEL
+        model = model or cfg.openai_model or DEFAULT_MODEL
 
         messages = [{"role": "system", "content": system_prompt}]
 
         for msg in history:
             messages.append({"role": msg.role, "content": msg.content})
 
-        content: list = []
-        for img_b64 in screenshots_b64:
-            content.append({
-                "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{img_b64}", "detail": "high"},
-            })
-        content.append({"type": "text", "text": user_text})
-        messages.append({"role": "user", "content": content})
+        if screenshots_b64:
+            content: list = []
+            for img_b64 in screenshots_b64:
+                content.append({
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{img_b64}", "detail": "high"},
+                })
+            content.append({"type": "text", "text": user_text})
+            messages.append({"role": "user", "content": content})
+        else:
+            messages.append({"role": "user", "content": user_text})
 
         stream = await self._client.chat.completions.create(
             model=model,
@@ -51,6 +62,8 @@ class OpenAIProvider(BaseLLMProvider):
 
     async def health_check(self) -> bool:
         try:
+            if cfg.openai_base_url and "openrouter" in cfg.openai_base_url:
+                return bool(cfg.openai_api_key)
             await self._client.models.list()
             return True
         except Exception:

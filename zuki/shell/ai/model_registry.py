@@ -96,13 +96,24 @@ async def _fetch_claude() -> list[dict]:
 async def _fetch_openai() -> list[dict]:
     if not cfg.openai_api_key:
         return []
-    async with httpx.AsyncClient(timeout=15) as client:
-        r = await client.get(
-            "https://api.openai.com/v1/models",
-            headers={"Authorization": f"Bearer {cfg.openai_api_key}"},
-        )
-    r.raise_for_status()
-    data = r.json().get("data", [])
+    if cfg.openai_base_url and "openrouter" in cfg.openai_base_url:
+        return [
+            {"id": "openrouter/free", "label": "OpenRouter Free (Auto Vision)", "vision": True},
+            {"id": "google/gemma-4-26b-a4b-it:free", "label": "Gemma 4 26B (Free Vision)", "vision": True},
+            {"id": "google/gemma-4-31b-it:free", "label": "Gemma 4 31B (Free Vision)", "vision": True},
+            {"id": "qwen/qwen3.8-27b:free", "label": "Qwen 3.8 27B (Free)", "vision": True},
+        ]
+    base = (cfg.openai_base_url or "https://api.openai.com/v1").rstrip("/")
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            r = await client.get(
+                f"{base}/models",
+                headers={"Authorization": f"Bearer {cfg.openai_api_key}"},
+            )
+        r.raise_for_status()
+        data = r.json().get("data", [])
+    except Exception:
+        return []
     out = []
     # Filter to chat-completion-capable models. OpenAI's /v1/models returns
     # everything (embeddings, TTS, image-gen, audio, etc.) so we whitelist by
