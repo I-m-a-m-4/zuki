@@ -14,8 +14,8 @@
   <meta property="og:url" content="https://zuki-agent.vercel.app">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/></svg>">
+  <!-- Favicon in brand orange with cursor -->
+  <link rel="icon" type="image/png" href="logo.png">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -226,18 +226,12 @@
   <!-- FIXED NAVBAR -->
   <nav id="navbar" class="fixed z-50 transition-all duration-300 bg-[#020412]/20 border-white/5 border-b top-0 right-0 left-0 backdrop-blur-md">
     <div class="flex h-16 max-w-7xl mx-auto px-6 items-center justify-between">
-      <!-- Logo -->
+      <!-- Logo: Orange Background with Cursor Icon -->
       <a href="#" class="flex items-center gap-2.5 group">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-          <div class="w-full h-full bg-[#0B0D15] rounded-[11px] flex items-center justify-center">
-            <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" x2="12" y1="19" y2="22"></line>
-            </svg>
-          </div>
+        <div class="w-9 h-9 rounded-xl overflow-hidden p-[1px] bg-gradient-to-tr from-orange-600 to-amber-500 shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform flex-shrink-0">
+          <img src="logo.png" alt="Zuki Logo" class="w-full h-full object-cover rounded-[10px]">
         </div>
-        <span class="font-manrope font-bold text-white text-lg tracking-tight">Zuki<span class="text-indigo-400 font-normal">.ai</span></span>
+        <span class="font-manrope font-bold text-white text-lg tracking-tight">Zuki<span class="text-orange-500 font-extrabold">.ai</span></span>
       </a>
 
       <!-- Desktop Links -->
@@ -516,9 +510,9 @@
               </div>
               <span class="text-[10px] border border-white/10 rounded px-1 font-mono text-slate-400">Ctrl+Space</span>
             </div>
-            <!-- Status Badge -->
-            <div class="w-7 h-7 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-xs text-indigo-300 font-semibold font-manrope">
-              Z
+            <!-- Status Badge (Zuki Orange Cursor Logo) -->
+            <div class="w-7 h-7 rounded-full overflow-hidden border border-orange-500/40 shadow-sm flex-shrink-0">
+              <img src="logo.png" alt="Zuki Logo" class="w-full h-full object-cover">
             </div>
           </div>
         </div>
@@ -1193,8 +1187,8 @@
           <!-- Bottom Footer Links & Copyright -->
           <div class="flex flex-col md:flex-row justify-between items-center gap-6 pt-6 border-t border-white/15 text-sm text-slate-200 font-manrope">
             <div class="flex items-center gap-3">
-              <div class="w-6 h-6 rounded-lg bg-indigo-500/30 border border-white/20 flex items-center justify-center text-white text-xs font-bold font-mono">
-                Z
+              <div class="w-7 h-7 rounded-lg overflow-hidden border border-orange-500/30 flex-shrink-0 shadow-sm">
+                <img src="logo.png" alt="Zuki Logo" class="w-full h-full object-cover">
               </div>
               <span class="font-bold text-white">Zuki AI</span>
               <span>© 2026 Zuki Project. All rights reserved.</span>
