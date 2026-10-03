@@ -9,12 +9,14 @@ Run:  uvicorn server.main:app --host 0.0.0.0 --port 8787
 from __future__ import annotations
 
 import hmac
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
+import httpx
 from fastapi import Depends, FastAPI, Request
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response, StreamingResponse
 from pydantic import BaseModel
 
 from . import config, db, firebase_auth, proxy
@@ -72,10 +74,15 @@ def _is_admin_email(email: Optional[str]) -> bool:
 def _user_payload(user: db.User, usage: dict) -> dict:
     is_admin = _is_admin_email(user.email)
     limit = config.DAILY_REQUEST_LIMIT if user.daily_request_limit is None else user.daily_request_limit
+    plan = "admin" if is_admin else getattr(user, "plan_tier", "free")
+    is_pro = is_admin or plan in ("pro", "unlimited", "admin")
     return {
         "uid": user.uid, "email": user.email, "name": user.name,
         "is_admin": is_admin,
-        "daily_request_limit": None if is_admin else limit,
+        "plan_tier": plan,
+        "is_pro": is_pro,
+        "subscription_status": "active" if is_pro else getattr(user, "subscription_status", "none"),
+        "daily_request_limit": None if is_pro else limit,
         "usage_today": usage,
     }
 
@@ -114,6 +121,11 @@ class LimitBody(BaseModel):
     daily_request_limit: Optional[int] = None
 
 
+class BillingInitBody(BaseModel):
+    currency: str = "NGN"
+    plan: str = "pro"
+
+
 # ── account ──────────────────────────────────────────────────────────────────
 
 @app.get("/auth/me")
@@ -121,10 +133,165 @@ def me(user: db.User = Depends(current_user)):
     return _user_payload(user, db.get_usage(user.uid))
 
 
+# ── Flutterwave Billing ──────────────────────────────────────────────────────
+
+@app.post("/v1/billing/initialize")
+async def billing_initialize(body: BillingInitBody, user: db.User = Depends(current_user)):
+    currency = (body.currency or "NGN").strip().upper()
+    amount = 5000 if currency == "NGN" else 10
+    tx_ref = f"zuki_{user.uid}_{int(time.time())}"
+
+    redirect_url = f"{config.SERVER_PUBLIC_URL}/billing/callback"
+    flw_payload = {
+        "tx_ref": tx_ref,
+        "amount": amount,
+        "currency": currency,
+        "redirect_url": redirect_url,
+        "customer": {
+            "email": user.email,
+            "name": user.name or user.email,
+        },
+        "customizations": {
+            "title": "Zuki Pro Subscription",
+            "description": f"Monthly Zuki Pro Access ({currency} {amount})",
+            "logo": "https://raw.githubusercontent.com/I-m-a-m-4/zuki/main/zuki/shell/assets/icon.ico",
+        },
+        "meta": {
+            "uid": user.uid,
+            "plan": body.plan,
+        },
+    }
+
+    headers = {
+        "Authorization": f"Bearer {config.FLUTTERWAVE_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post("https://api.flutterwave.com/v3/payments", json=flw_payload, headers=headers)
+            res_data = resp.json()
+    except Exception as e:
+        return _error(500, "billing_error", f"Failed to connect to Flutterwave: {e}")
+
+    if resp.status_code != 200 or res_data.get("status") != "success":
+        msg = res_data.get("message") or "Failed to initiate payment with Flutterwave."
+        return _error(400, "billing_error", msg)
+
+    link = (res_data.get("data") or {}).get("link")
+    return {"ok": True, "payment_link": link, "tx_ref": tx_ref}
+
+
+@app.get("/billing/callback")
+async def billing_callback(status: Optional[str] = None, tx_ref: Optional[str] = None, transaction_id: Optional[str] = None):
+    verified = False
+    error_msg = ""
+    uid = None
+
+    if transaction_id and config.FLUTTERWAVE_SECRET_KEY:
+        try:
+            headers = {"Authorization": f"Bearer {config.FLUTTERWAVE_SECRET_KEY}"}
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                v_resp = await client.get(f"https://api.flutterwave.com/v3/transactions/{transaction_id}/verify", headers=headers)
+                v_data = v_resp.json()
+                if v_resp.status_code == 200 and v_data.get("status") == "success":
+                    t_data = v_data.get("data") or {}
+                    if t_data.get("status") == "successful":
+                        verified = True
+                        meta = t_data.get("meta") or {}
+                        uid = meta.get("uid")
+                        if not uid and tx_ref and tx_ref.startswith("zuki_"):
+                            parts = tx_ref.split("_")
+                            if len(parts) >= 2:
+                                uid = parts[1]
+                        if uid:
+                            db.upgrade_user_plan(uid, "pro", tx_ref)
+        except Exception as e:
+            error_msg = str(e)
+
+    if verified:
+        html = """
+        <!doctype html>
+        <html>
+        <head><title>Zuki Pro — Payment Successful</title>
+        <style>
+          body { background: #0b0d12; color: #e8ecf4; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+          .card { background: #141821; border: 1px solid #252c3d; padding: 40px; border-radius: 16px; text-align: center; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+          h1 { color: #3ddc97; margin: 0 0 12px; font-size: 24px; }
+          p { color: #8b93a7; line-height: 1.6; margin: 0 0 24px; }
+          .badge { display: inline-block; background: #7c6cff; color: white; padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-bottom: 20px; }
+        </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="badge">✨ ZUKI PRO ACTIVE</div>
+            <h1>Payment Successful!</h1>
+            <p>Thank you for subscribing to <b>Zuki Pro</b>. Your account has been upgraded with unlimited access, high-speed inference, and all premium features.</p>
+            <p>You can close this tab and return to the Zuki desktop app.</p>
+          </div>
+        </body>
+        </html>
+        """
+        return HTMLResponse(content=html, status_code=200)
+    else:
+        html = f"""
+        <!doctype html>
+        <html>
+        <head><title>Payment Incomplete</title>
+        <style>
+          body {{ background: #0b0d12; color: #e8ecf4; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }}
+          .card {{ background: #141821; border: 1px solid #252c3d; padding: 40px; border-radius: 16px; text-align: center; max-width: 440px; }}
+          h1 {{ color: #ff5c6c; margin: 0 0 12px; font-size: 22px; }}
+          p {{ color: #8b93a7; line-height: 1.6; margin: 0 0 20px; }}
+        </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>Payment Verification Incomplete</h1>
+            <p>We could not automatically verify this payment. {error_msg}</p>
+            <p>If you were charged, please contact support with reference: <b>{tx_ref or transaction_id}</b>.</p>
+          </div>
+        </body>
+        </html>
+        """
+        return HTMLResponse(content=html, status_code=400)
+
+
+@app.post("/v1/billing/webhook")
+async def billing_webhook(request: Request):
+    secret_hash = config.FLUTTERWAVE_ENCRYPTION_KEY
+    signature = request.headers.get("verif-hash")
+    if secret_hash and signature != secret_hash:
+        return Response(status_code=401)
+
+    try:
+        body = await request.json()
+    except Exception:
+        return Response(status_code=400)
+
+    data = body.get("data") or {}
+    status = data.get("status")
+    tx_ref = data.get("tx_ref") or ""
+
+    if status == "successful" and tx_ref.startswith("zuki_"):
+        meta = data.get("meta") or {}
+        uid = meta.get("uid")
+        if not uid:
+            parts = tx_ref.split("_")
+            if len(parts) >= 2:
+                uid = parts[1]
+        if uid:
+            db.upgrade_user_plan(uid, "pro", tx_ref)
+
+    return {"status": "ok"}
+
+
 # ── Claude proxy ─────────────────────────────────────────────────────────────
 
 def _enforce_quota(user: db.User) -> Optional[JSONResponse]:
     if _is_admin_email(user.email):
+        return None
+    if getattr(user, "plan_tier", "free") in ("pro", "unlimited", "admin"):
         return None
     limit = config.DAILY_REQUEST_LIMIT if user.daily_request_limit is None else user.daily_request_limit
     if limit is None:
@@ -133,10 +300,11 @@ def _enforce_quota(user: db.User) -> Optional[JSONResponse]:
     if usage["requests"] >= limit:
         return _error(
             429, "rate_limit_error",
-            f"Daily limit reached ({limit} requests). Resets at midnight UTC.",
+            f"Daily limit reached ({limit} requests). Resets at midnight UTC, or upgrade to Zuki Pro for unlimited access.",
             headers={"retry-after": "3600"},
         )
     return None
+
 
 
 def _enforce_model(body: dict) -> Optional[JSONResponse]:
@@ -253,6 +421,10 @@ def admin_disable(uid: str, body: DisableBody, _: None = Depends(require_admin))
     return {"ok": True}
 
 
+class PlanBody(BaseModel):
+    plan_tier: str  # "free" or "pro"
+
+
 @app.post("/admin/users/{uid}/limit")
 def admin_limit(uid: str, body: LimitBody, _: None = Depends(require_admin)):
     if body.daily_request_limit is not None and body.daily_request_limit < 0:
@@ -260,6 +432,14 @@ def admin_limit(uid: str, body: LimitBody, _: None = Depends(require_admin)):
     if not db.set_limit(uid, body.daily_request_limit):
         return _error(404, "not_found_error", "No such user.")
     return {"ok": True}
+
+
+@app.post("/admin/users/{uid}/plan")
+def admin_plan(uid: str, body: PlanBody, _: None = Depends(require_admin)):
+    if not db.upgrade_user_plan(uid, body.plan_tier):
+        return _error(404, "not_found_error", "No such user.")
+    return {"ok": True}
+
 
 
 # ── misc ─────────────────────────────────────────────────────────────────────

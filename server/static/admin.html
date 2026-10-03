@@ -162,11 +162,12 @@
           <thead>
             <tr>
               <th>Account</th>
+              <th>Plan</th>
               <th class="num">Today</th>
               <th class="num">All time</th>
               <th>Daily limit</th>
               <th>Status</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -298,6 +299,12 @@ function render() {
       " · last seen " + (u.last_seen || "?").slice(0, 16).replace("T", " ")));
     tr.append(tdAcct);
 
+    const isPro = u.plan_tier === "pro" || (u.email && u.email.toLowerCase() === "belloimam431@gmail.com");
+    const tdPlan = el("td");
+    const planPill = el("span", "pill " + (isPro ? "on" : "off"), isPro ? "PRO ✨" : "FREE");
+    tdPlan.append(planPill);
+    tr.append(tdPlan);
+
     const tdToday = el("td", "num");
     tdToday.append(el("div", null, fmt(u.requests_today) + " req"));
     tdToday.append(el("div", "hint", fmt((u.input_tokens_today || 0) + (u.output_tokens_today || 0)) + " tok"));
@@ -339,6 +346,26 @@ function render() {
     tr.append(tdStatus);
 
     const tdAct = el("td");
+    const rowAct = el("div", "row");
+    rowAct.style.gap = "6px";
+
+    const planBtn = el("button", isPro ? "ghost sm" : "ok sm", isPro ? "Make Free" : "Upgrade Pro");
+    planBtn.onclick = async () => {
+      planBtn.disabled = true;
+      try {
+        const next = isPro ? "free" : "pro";
+        await api("/admin/users/" + encodeURIComponent(u.uid) + "/plan", {
+          method: "POST",
+          body: JSON.stringify({ plan_tier: next }),
+        });
+        u.plan_tier = next;
+        setMsg(msg2, `Changed ${u.email} to ${next.toUpperCase()}`, "info");
+        render();
+      } catch (e) { setMsg(msg2, e.message, "err"); }
+      finally { planBtn.disabled = false; }
+    };
+    rowAct.append(planBtn);
+
     const toggle = el("button", u.disabled ? "ok sm" : "danger sm", u.disabled ? "Enable" : "Disable");
     toggle.onclick = async () => {
       toggle.disabled = true;
@@ -352,7 +379,8 @@ function render() {
       } catch (e) { setMsg(msg2, e.message, "err"); }
       finally { toggle.disabled = false; }
     };
-    tdAct.append(toggle);
+    rowAct.append(toggle);
+    tdAct.append(rowAct);
     tr.append(tdAct);
 
     tbody.append(tr);

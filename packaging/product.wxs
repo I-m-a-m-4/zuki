@@ -1,0 +1,32 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Zuki"
+           Manufacturer="Zuki AI"
+           Version="0.2.0"
+           UpgradeCode="4F8E5A7B-3C2D-4E1F-9A8B-7C6D5E4F3A2B"
+           Scope="perUserOrMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Zuki is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Zuki">
+        <Files Include="..\dist\Zuki\**" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="ApplicationShortcut" Guid="7D9E4C2A-1B3F-4E5A-8C6D-9F1A2B3C4D5E">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="Zuki"
+                  Description="Zuki AI Desktop Companion"
+                  Target="[INSTALLFOLDER]Zuki.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU" Key="Software\ZukiAI\Zuki" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Zuki" Level="1">
+      <Files Include="..\dist\Zuki\**" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+  </Package>
+</Wix>

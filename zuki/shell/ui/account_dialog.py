@@ -19,10 +19,11 @@ Firebase over TLS. The session is cached by `account.py`.
 from __future__ import annotations
 
 import threading
+import webbrowser
 
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
-    QCheckBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QCheckBox, QComboBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QVBoxLayout,
 )
 
@@ -33,11 +34,11 @@ QLabel#title { font-size: 20px; font-weight: 700; }
 QLabel#subtitle { color: #a0a3a8; font-size: 13px; }
 QLabel#status { color: #c8cbd0; font-size: 13px; }
 QLabel#hint { color: #6a6d73; font-size: 11px; }
-QLineEdit {
+QLineEdit, QComboBox {
     background: #1a1d22; border: 1px solid #2a2d33;
     border-radius: 6px; padding: 8px; color: #e8eaed;
 }
-QLineEdit:focus { border-color: #2f7fff; }
+QLineEdit:focus, QComboBox:focus { border-color: #2f7fff; }
 QCheckBox { color: #a0a3a8; font-size: 12px; }
 QPushButton {
     background: #1f6feb; color: white; border: none;
@@ -46,6 +47,11 @@ QPushButton {
 }
 QPushButton:hover  { background: #2f7fff; }
 QPushButton:disabled { background: #333; color: #888; }
+QPushButton#pro {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7c6cff, stop:1 #9d8eff);
+    color: white; font-weight: 700;
+}
+QPushButton#pro:hover { filter: brightness(1.15); }
 QPushButton#secondary {
     background: transparent; color: #a0a3a8;
     border: 1px solid #2a2d33;
@@ -188,17 +194,72 @@ class AccountDialog(QDialog):
         b = self._body
 
         user = current_user() or {}
+        email = (user.get("email") or "").lower()
+        name = user.get("name") or ""
+        is_admin = (email == "belloimam431@gmail.com") or user.get("is_admin", False)
+        plan_tier = "admin" if is_admin else user.get("plan_tier", "free")
+        is_pro = is_admin or plan_tier in ("pro", "unlimited", "admin")
+
         title = QLabel("You're signed in")
         title.setObjectName("title")
         b.addWidget(title)
 
         sub = QLabel(
-            f"<b>{_esc(user.get('email') or user.get('name') or 'Zuki user')}</b>"
-            + (f" — {_esc(user.get('name'))}" if user.get("name") else "")
+            f"<b>{_esc(user.get('email') or name or 'Zuki user')}</b>"
+            + (f" — {_esc(name)}" if name else "")
         )
         sub.setObjectName("subtitle")
         sub.setWordWrap(True)
         b.addWidget(sub)
+
+        if is_admin:
+            badge = QLabel(
+                "👑 <b>Administrator Account</b><br>"
+                "Full unlimited access to all AI features, Computer Use, and model lanes."
+            )
+            badge.setStyleSheet(
+                "color: #ffc555; background: #231b0a; border: 1px solid #5a4510; "
+                "padding: 12px 14px; border-radius: 8px; font-size: 13px;"
+            )
+            b.addWidget(badge)
+        elif is_pro:
+            badge = QLabel(
+                "✨ <b>Zuki Pro Active</b><br>"
+                "Unlimited daily requests, priority models & background research agents."
+            )
+            badge.setStyleSheet(
+                "color: #3ddc97; background: #0c2518; border: 1px solid #1f4a38; "
+                "padding: 12px 14px; border-radius: 8px; font-size: 13px;"
+            )
+            b.addWidget(badge)
+        else:
+            badge = QLabel("<b>Free Plan</b> · 200 requests/day")
+            badge.setStyleSheet(
+                "color: #8b93a7; background: #141821; border: 1px solid #252c3d; "
+                "padding: 10px 14px; border-radius: 8px; font-size: 13px;"
+            )
+            b.addWidget(badge)
+
+            p_label = QLabel("Upgrade to <b>Zuki Pro</b> (Card, Transfer, USSD via Flutterwave):")
+            p_label.setStyleSheet("color: #c8cbd0; font-size: 12px; margin-top: 6px;")
+            b.addWidget(p_label)
+
+            curr_row = QHBoxLayout()
+            curr_row.setSpacing(8)
+            self.curr_combo = QComboBox()
+            self.curr_combo.addItem("₦5,000 NGN / month (Nigeria)", "NGN")
+            self.curr_combo.addItem("$10 USD / month (International)", "USD")
+            curr_row.addWidget(self.curr_combo, 1)
+
+            up_btn = QPushButton("⭐ Upgrade to Pro")
+            up_btn.setObjectName("pro")
+            up_btn.clicked.connect(self._on_start_flutterwave)
+            curr_row.addWidget(up_btn)
+            b.addLayout(curr_row)
+
+            self.billing_status = QLabel("")
+            self.billing_status.setStyleSheet("color: #a0a3a8; font-size: 11px;")
+            b.addWidget(self.billing_status)
 
         msg = QLabel("Claude requests go through your Zuki account. "
                      "Sign out to use a different one.")
@@ -212,12 +273,70 @@ class AccountDialog(QDialog):
         out_btn.setObjectName("danger")
         out_btn.clicked.connect(self._on_sign_out)
         row.addWidget(out_btn)
+
+        refresh_btn = QPushButton("Refresh Status")
+        refresh_btn.setObjectName("secondary")
+        refresh_btn.clicked.connect(self._on_refresh_status)
+        row.addWidget(refresh_btn)
+
         row.addStretch(1)
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
         close_btn.clicked.connect(self.accept)
         row.addWidget(close_btn)
         b.addLayout(row)
+
+    def _on_refresh_status(self):
+        def _fetch():
+            try:
+                import httpx, account
+                from config import cfg
+                token = account.id_token()
+                server_url = (getattr(cfg, "server_url", None) or "http://127.0.0.1:8787").rstrip("/")
+                r = httpx.get(f"{server_url}/auth/me", headers={"Authorization": f"Bearer {token}"}, timeout=10.0)
+                if r.status_code == 200:
+                    data = r.json()
+                    user = current_user() or {}
+                    user["is_admin"] = data.get("is_admin", False)
+                    user["is_pro"] = data.get("is_pro", False)
+                    user["plan_tier"] = data.get("plan_tier", "free")
+                    import account as _acc
+                    _acc._store({**_acc._load(), **user})
+            except Exception:
+                pass
+            self.auth_done.emit(True, "")
+
+        threading.Thread(target=_fetch, daemon=True).start()
+
+    def _on_start_flutterwave(self):
+        currency = self.curr_combo.currentData() if hasattr(self, "curr_combo") else "NGN"
+        if hasattr(self, "billing_status"):
+            self.billing_status.setText("Connecting to Flutterwave secure checkout…")
+
+        def _worker():
+            try:
+                import httpx, account
+                from config import cfg
+                token = account.id_token()
+                server_url = (getattr(cfg, "server_url", None) or "http://127.0.0.1:8787").rstrip("/")
+                r = httpx.post(
+                    f"{server_url}/v1/billing/initialize",
+                    json={"currency": currency, "plan": "pro"},
+                    headers={"Authorization": f"Bearer {token}"},
+                    timeout=20.0
+                )
+                if r.status_code == 200:
+                    link = (r.json() or {}).get("payment_link")
+                    if link:
+                        webbrowser.open(link)
+                        self.status_signal.emit("Opened payment in browser. Click 'Refresh Status' after paying.")
+                        return
+                err = (r.json() or {}).get("error", {}).get("message") or "Failed to initiate payment."
+                self.status_signal.emit(f"⚠️ {err}")
+            except Exception as e:
+                self.status_signal.emit(f"⚠️ Connection error: {e}")
+
+        threading.Thread(target=_worker, daemon=True).start()
 
     # ── interactions ─────────────────────────────────────────────────────────
 

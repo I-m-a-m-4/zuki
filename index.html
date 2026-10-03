@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zuki 🧤 — The Voice-First AI Desktop Companion for Windows</title>
+  <meta name="description" content="Talk to your PC — Zuki sees your screen, points accurately at UI elements, and executes complex tasks with Claude Computer Use and Groq." />
+  <meta property="og:title" content="Zuki 🧤 — The Voice-First AI Desktop Companion for Windows" />
+  <meta property="og:description" content="She sees your screen, points at things, and actually does them. Download for Windows 10/11." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://zuki-ai.vercel.app" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#07090e" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="zuki/shell/assets/icon.ico" />
+</head>
+<body>
+  <!-- Ambient Glow Effects -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- Header / Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand">
+        <span class="brand-icon">🧤</span>
+        <span class="brand-name">Zuki</span>
+        <span class="version-tag">v0.2.0</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noreferrer" class="github-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="#download" class="btn btn-sm btn-primary">Download Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container hero-container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Windows Desktop Autonomous AI Companion</span>
+      </div>
+
+      <h1 class="hero-title">
+        Talk to your PC.<br />
+        <span class="gradient-text">She sees, points, and actually acts.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Hold <code>Ctrl+Alt+M</code> and speak. Zuki looks at your Windows screen, flies directly to UI buttons with pixel accuracy, and takes over multi-step workflows using Claude Computer Use and Groq.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Setup-Zuki.exe" class="btn btn-lg btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          <span>Download Setup-Zuki.exe</span>
+        </a>
+        <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Zuki.msi" class="btn btn-lg btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>Download .MSI Installer</span>
+        </a>
+      </div>
+
+      <div class="hero-spec-pills">
+        <span class="pill">⚡ Windows 10 & 11 (64-bit)</span>
+        <span class="pill">🧠 Claude 3.5 + Groq + OpenRouter</span>
+        <span class="pill">🛡️ 100% Reversible File Operations</span>
+        <span class="pill">🔒 Open Source MIT</span>
+      </div>
+
+      <!-- Live Mockup / Desktop Experience Preview -->
+      <div class="hero-mockup">
+        <div class="window-frame">
+          <div class="window-header">
+            <div class="window-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="window-title">Zuki Active Overlay · Windows 11 Desktop</div>
+            <div class="hotkey-indicator">Hold [Ctrl+Alt+M]</div>
+          </div>
+          <div class="window-viewport">
+            <div class="desktop-wallpaper">
+              <!-- Visual Mock UI Elements -->
+              <div class="mock-card card-excel">
+                <div class="mock-header">Q3 Financial Report.xlsx</div>
+                <div class="mock-grid">
+                  <div class="mock-row"></div>
+                  <div class="mock-row"></div>
+                  <div class="mock-row"></div>
+                </div>
+              </div>
+
+              <!-- Animated Zuki Pointer Buddy -->
+              <div class="zuki-pointer" id="zukiPointer">
+                <div class="pointer-bubble" id="pointerBubble">
+                  <span class="bubble-icon">🧤</span>
+                  <span class="bubble-text">"Found the Export button! Clicking it now…"</span>
+                </div>
+                <div class="pointer-hand"></div>
+                <div class="pointer-ping"></div>
+              </div>
+
+              <!-- Live Voice Waveform -->
+              <div class="voice-bar">
+                <div class="voice-status">
+                  <span class="pulse-indicator"></span>
+                  <span id="voiceStatusText">Listening: "Walk me through this report and export it"</span>
+                </div>
+                <div class="voice-waves">
+                  <span class="wave"></span><span class="wave"></span><span class="wave"></span>
+                  <span class="wave"></span><span class="wave"></span><span class="wave"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Voice Playground Section -->
+  <section class="section interactive-section">
+    <div class="container">
+      <div class="section-badge">Try The Prompts</div>
+      <h2 class="section-title">What can you say to Zuki?</h2>
+      <p class="section-subtitle">Click any command below to see how Zuki responds on your desktop in real-time.</p>
+
+      <div class="prompts-grid">
+        <button class="prompt-chip active" data-action="tour" data-reply="I see your Visual Studio Code and browser window. Let me point out your failing test in line 42.">
+          "Explain my screen"
+        </button>
+        <button class="prompt-chip" data-action="act" data-reply="Opening Spotify and searching for Lo-Fi Chill playlist right away.">
+          "Open Spotify and play Lo-Fi"
+        </button>
+        <button class="prompt-chip" data-action="organize" data-reply="Scanning Desktop: Moved 14 screenshots into /Screenshots and sorted icons alphabetically. Run 'zuki undo' to revert.">
+          "Clean up my desktop"
+        </button>
+        <button class="prompt-chip" data-action="background" data-reply="Delegating to background Hermes agent. I'll research the market competitors and save a full report in research.md.">
+          "Research agent frameworks in the background"
+        </button>
+      </div>
+
+      <div class="simulation-box">
+        <div class="sim-response">
+          <div class="sim-avatar">🧤</div>
+          <div class="sim-content">
+            <div class="sim-name">Zuki Spoken Answer:</div>
+            <div class="sim-text" id="simText">"I see your Visual Studio Code and browser window. Let me point out your failing test in line 42."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Section -->
+  <section id="features" class="section features-section">
+    <div class="container">
+      <div class="section-badge">Superpowers</div>
+      <h2 class="section-title">Built for Windows. Powered by SOTA AI.</h2>
+      <p class="section-subtitle">No browser sandbox limitations. Zuki operates natively with real Windows UI Automation and Win32 controls.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">👁️</div>
+          <h3>Pixel-Accurate UI Snapping</h3>
+          <p>Unlike raw vision guesses, Zuki inspects the Windows UI Automation (UIA) tree to snap directly onto native buttons, text inputs, and menus with 100% click fidelity.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Groq & Deepgram Voice</h3>
+          <p>Push-to-talk with streaming STT powered by Deepgram or Groq Whisper-large-v3, responding in sub-seconds with realistic Edge-TTS narration.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🦾</div>
+          <h3>Hands-On Computer Use</h3>
+          <p>Direct actuation via Claude Computer Use. Zuki navigates apps, types text, and finishes tasks, guarded by an emergency <code>Esc</code> abort key.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗂️</div>
+          <h3>Journaled File Organizer</h3>
+          <p>Tidies cluttered Desktops and Downloads with single-step LLM classification. Every operation is journaled and 100% reversible via <code>zuki undo</code>.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Background Hermes Agents</h3>
+          <p>"Go research X and report back." Background agents run asynchronously with DDGS search, delivering real files and syncing with connected Notion/Composio MCP tools.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Learned Voice Skills</h3>
+          <p>Teach Zuki custom routines simply by voice: <em>"Save this as my morning routine"</em>. Skills are saved as open, PR-able <code>SKILL.md</code> files.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing / Commercialization Section -->
+  <section id="pricing" class="section pricing-section">
+    <div class="container">
+      <div class="section-badge">Plans & Access</div>
+      <h2 class="section-title">Simple, transparent pricing.</h2>
+      <p class="section-subtitle">Start completely free, or unlock unlimited autonomous desktop hours with Zuki Pro.</p>
+
+      <div class="pricing-grid">
+        <!-- Free Plan -->
+        <div class="pricing-card">
+          <div class="plan-header">
+            <h3>Community Free</h3>
+            <div class="plan-price">$0 <span>/ month</span></div>
+            <p class="plan-desc">Perfect for everyday screen Q&A and tidy desktop management.</p>
+          </div>
+          <ul class="plan-features">
+            <li>✓ Voice-activated desktop companion</li>
+            <li>✓ Screen tour & element pointing</li>
+            <li>✓ Heuristic file organizer + undo</li>
+            <li>✓ 200 daily Claude & Groq requests</li>
+            <li>✓ Local Ollama model support</li>
+          </ul>
+          <a href="#download" class="btn btn-secondary btn-block">Download Free</a>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="pricing-card pro-card">
+          <div class="pro-ribbon">POPULAR</div>
+          <div class="plan-header">
+            <h3>Zuki Pro ✨</h3>
+            <div class="plan-price">
+              <span class="currency-toggle">₦5,000 NGN</span> <span class="alt-price">or $10 USD</span>
+              <span class="period">/ month</span>
+            </div>
+            <p class="plan-desc">For professionals, builders, and power users who want autonomous hands.</p>
+          </div>
+          <ul class="plan-features">
+            <li>✓ <b>Unlimited</b> Claude 3.5 Sonnet Computer Use</li>
+            <li>✓ Ultra-fast Groq transcription & routing</li>
+            <li>✓ Background Hermes research agents</li>
+            <li>✓ Model Context Protocol (MCP) integrations (Notion, Composio, Slack)</li>
+            <li>✓ Priority model queues & zero rate limits</li>
+            <li>✓ Secure payment via Flutterwave (Card, Bank Transfer, USSD)</li>
+          </ul>
+          <a href="#download" class="btn btn-primary btn-block">Upgrade in App</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download & Get Started Section -->
+  <section id="download" class="section download-section">
+    <div class="container">
+      <div class="download-box">
+        <h2 class="download-title">Ready to put your PC on autopilot?</h2>
+        <p class="download-subtitle">Download Zuki for Windows 10 & 11. No Python setup required.</p>
+
+        <div class="download-buttons">
+          <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Setup-Zuki.exe" class="btn btn-lg btn-primary">
+            Download Setup-Zuki.exe
+          </a>
+          <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Zuki.msi" class="btn btn-lg btn-secondary">
+            Download Zuki.msi
+          </a>
+        </div>
+
+        <div class="download-note">
+          Also available on GitHub Actions Releases · Microsoft Store verification in progress.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <div class="brand">
+          <span class="brand-icon">🧤</span>
+          <span class="brand-name">Zuki for Windows</span>
+        </div>
+        <p class="footer-copy">Released under the MIT License · Built for Windows with love.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noreferrer">GitHub Repository</a>
+        <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" rel="noreferrer">Releases</a>
+        <a href="https://github.com/I-m-a-m-4/zuki/blob/main/docs/USAGE.md" target="_blank" rel="noreferrer">Documentation</a>
+        <a href="https://github.com/I-m-a-m-4/zuki/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">Contributing</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

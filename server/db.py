@@ -44,7 +44,10 @@ def init_db() -> None:
                 created_at TEXT NOT NULL,
                 last_seen TEXT NOT NULL,
                 disabled INTEGER NOT NULL DEFAULT 0,
-                daily_request_limit INTEGER
+                daily_request_limit INTEGER,
+                plan_tier TEXT NOT NULL DEFAULT 'free',
+                subscription_ref TEXT,
+                subscription_status TEXT NOT NULL DEFAULT 'none'
             );
             CREATE TABLE IF NOT EXISTS usage (
                 uid TEXT NOT NULL REFERENCES users(uid),
@@ -56,6 +59,14 @@ def init_db() -> None:
             );
             """
         )
+        # Migration for existing databases
+        columns = [row["name"] for row in conn.execute("PRAGMA table_info(users)").fetchall()]
+        if "plan_tier" not in columns:
+            conn.execute("ALTER TABLE users ADD COLUMN plan_tier TEXT NOT NULL DEFAULT 'free'")
+        if "subscription_ref" not in columns:
+            conn.execute("ALTER TABLE users ADD COLUMN subscription_ref TEXT")
+        if "subscription_status" not in columns:
+            conn.execute("ALTER TABLE users ADD COLUMN subscription_status TEXT NOT NULL DEFAULT 'none'")
 
 
 def _now() -> str:
@@ -77,14 +88,21 @@ class User:
     last_seen: str
     disabled: bool
     daily_request_limit: Optional[int]
+    plan_tier: str = "free"
+    subscription_ref: Optional[str] = None
+    subscription_status: str = "none"
 
     @staticmethod
     def from_row(row: sqlite3.Row) -> "User":
+        keys = row.keys()
         return User(
             uid=row["uid"], email=row["email"], name=row["name"],
             created_at=row["created_at"], last_seen=row["last_seen"],
             disabled=bool(row["disabled"]),
             daily_request_limit=row["daily_request_limit"],
+            plan_tier=row["plan_tier"] if "plan_tier" in keys else "free",
+            subscription_ref=row["subscription_ref"] if "subscription_ref" in keys else None,
+            subscription_status=row["subscription_status"] if "subscription_status" in keys else "none",
         )
 
 
@@ -105,6 +123,16 @@ def ensure_user(uid: str, email: str, name: Optional[str] = None) -> User:
         )
         row = conn.execute("SELECT * FROM users WHERE uid = ?", (uid,)).fetchone()
     return User.from_row(row)
+
+
+def upgrade_user_plan(uid: str, plan_tier: str = "pro", ref: Optional[str] = None) -> bool:
+    """Upgrade user plan and update subscription reference."""
+    with _lock, _connect() as conn:
+        cur = conn.execute(
+            "UPDATE users SET plan_tier = ?, subscription_ref = ?, subscription_status = 'active' WHERE uid = ?",
+            (plan_tier, ref, uid),
+        )
+        return cur.rowcount > 0
 
 
 def get_user(uid: str) -> Optional[User]:
@@ -137,6 +165,9 @@ def list_users() -> list[dict]:
             "created_at": r["created_at"], "last_seen": r["last_seen"],
             "disabled": bool(r["disabled"]),
             "daily_request_limit": r["daily_request_limit"],
+            "plan_tier": r["plan_tier"] if "plan_tier" in r.keys() else "free",
+            "subscription_ref": r["subscription_ref"] if "subscription_ref" in r.keys() else None,
+            "subscription_status": r["subscription_status"] if "subscription_status" in r.keys() else "none",
             "requests_today": r["requests_today"],
             "input_tokens_today": r["input_tokens_today"],
             "output_tokens_today": r["output_tokens_today"],
@@ -145,6 +176,7 @@ def list_users() -> list[dict]:
         }
         for r in rows
     ]
+
 
 
 def set_disabled(uid: str, disabled: bool) -> bool:

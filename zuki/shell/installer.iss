@@ -12,9 +12,9 @@
 ; ────────────────────────────────────────────────────────────────────
 
 #define MyAppName        "Zuki"
-#define MyAppVersion     "1.1.2"
-#define MyAppPublisher   "Shashank Singh"
-#define MyAppURL         "https://github.com/Bitshank-2338/clicky-windows"
+#define MyAppVersion     "0.2.0"
+#define MyAppPublisher   "Zuki AI"
+#define MyAppURL         "https://github.com/I-m-a-m-4/zuki"
 #define MyAppExeName     "Zuki.exe"
 
 [Setup]
