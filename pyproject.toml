@@ -1,6 +1,6 @@
 [project]
 name = "zuki"
-version = "0.2.0"
+version = "0.2.1"
 description = "The open-source Windows agent companion — autonomous, but you can take it back."
 readme = "README.md"
 requires-python = ">=3.11"

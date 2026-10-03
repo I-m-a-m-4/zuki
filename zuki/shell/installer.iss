@@ -12,7 +12,7 @@
 ; ────────────────────────────────────────────────────────────────────
 
 #define MyAppName        "Zuki"
-#define MyAppVersion     "0.2.0"
+#define MyAppVersion     "0.2.1"
 #define MyAppPublisher   "Zuki AI"
 #define MyAppURL         "https://github.com/I-m-a-m-4/zuki"
 #define MyAppExeName     "Zuki.exe"
