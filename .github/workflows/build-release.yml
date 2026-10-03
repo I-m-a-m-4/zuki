@@ -36,11 +36,14 @@ jobs:
       - name: Compile Inno Setup Installer (.exe)
         run: |
           choco install innosetup --no-progress
-          iscc zuki/shell/installer.iss
+          $iscc = (Get-ChildItem -Path "C:\Program Files*", "C:\ProgramData\chocolatey" -Filter "ISCC.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+          if (-not $iscc) { $iscc = "iscc" }
+          & $iscc zuki/shell/installer.iss
 
       - name: Compile WiX Installer (.msi)
         run: |
           dotnet tool install --global wix
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
           wix build packaging/product.wxs -o dist/Zuki.msi
 
       - name: Archive Portable Folder (.zip)
