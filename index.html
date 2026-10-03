@@ -1,320 +1,1257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zuki 🧤 — The Voice-First AI Desktop Companion for Windows</title>
-  <meta name="description" content="Talk to your PC — Zuki sees your screen, points accurately at UI elements, and executes complex tasks with Claude Computer Use and Groq." />
-  <meta property="og:title" content="Zuki 🧤 — The Voice-First AI Desktop Companion for Windows" />
-  <meta property="og:description" content="She sees your screen, points at things, and actually does them. Download for Windows 10/11." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://zuki-ai.vercel.app" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#07090e" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zuki - The All-in-One Voice AI Desktop Companion for Windows</title>
+  <meta name="description" content="Control your Windows PC with natural voice commands. Powered by Claude 3.5 Sonnet, Groq, and Hermes for coordinate-perfect desktop automation.">
+  <meta name="keywords" content="Zuki, AI Desktop Assistant, Voice Control Windows, Claude Computer Use, Windows UIA, Groq Whisper">
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zuki - The All-in-One Voice AI Desktop Companion">
+  <meta property="og:description" content="Speak naturally, automate workflows, and let AI operate your Windows PC with real computer vision and coordinate-perfect UIA execution.">
+  <meta property="og:url" content="https://zuki-agent.vercel.app">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/></svg>">
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/x-icon" href="zuki/shell/assets/icon.ico" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Iconify CDN -->
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+  <!-- Flutterwave Inline Checkout JS -->
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+  <style>
+    :root {
+      --font-inter: 'Inter', sans-serif;
+      --font-manrope: 'Manrope', sans-serif;
+    }
+    body {
+      font-family: var(--font-inter);
+      background-color: #020412;
+      overflow-x: hidden;
+      color: #fff;
+    }
+    .font-manrope {
+      font-family: var(--font-manrope);
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Smooth Reveal Animation */
+    @keyframes clipReveal {
+      0% {
+        opacity: 0.1;
+        transform: translateY(20px) scale(0.98);
+        filter: blur(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+    .animate-intro {
+      animation: clipReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Noodle / Beam Animation */
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    .noodle-path {
+      stroke-dasharray: 10;
+      stroke-dashoffset: 200;
+      animation: dash 2s linear infinite;
+    }
+
+    /* Flashlight Card Effect */
+    .flashlight-card {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .flashlight-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        rgba(255, 255, 255, 0.08),
+        transparent 40%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .flashlight-card:hover::before {
+      opacity: 1;
+    }
+    .flashlight-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(400px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        rgba(99, 102, 241, 0.4),
+        transparent 40%);
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      padding: 1px;
+      border-radius: inherit;
+    }
+    .flashlight-card:hover::after {
+      opacity: 1;
+    }
+
+    /* Sonar Radar Pulse */
+    @keyframes sonar {
+      0% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+    .sonar-emitter {
+      position: relative;
+    }
+    .sonar-emitter::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: inherit;
+      z-index: -1;
+      animation: sonar 2s infinite cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    /* Aurora Horizon Glow */
+    @keyframes aurora-move {
+      0% {
+        background-position: 0% 50%;
+        transform: scale(1);
+      }
+      50% {
+        background-position: 100% 50%;
+        transform: scale(1.1);
+      }
+      100% {
+        background-position: 0% 50%;
+        transform: scale(1);
+      }
+    }
+
+    /* Light Reflection on H1 */
+    @keyframes reflection-loop {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+    .title-reflection {
+      background: linear-gradient(110deg,
+        #ffffff 45%,
+        #a5f3fc 50%,
+        #ffffff 55%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: reflection-loop 6s ease-in-out infinite;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+  </style>
 </head>
-<body>
-  <!-- Ambient Glow Effects -->
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
 
-  <!-- Header / Navigation -->
-  <nav class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="brand">
-        <span class="brand-icon">🧤</span>
-        <span class="brand-name">Zuki</span>
-        <span class="version-tag">v0.2.0</span>
+<body class="min-h-screen selection:bg-indigo-500/30 text-slate-300">
+
+  <!-- HORIZON GRADIENT BACKGROUND -->
+  <div class="fixed -z-50 overflow-hidden w-full h-full top-0 right-0 bottom-0 left-0 pointer-events-none">
+    <!-- Base Horizon Gradient -->
+    <div class="w-full h-full absolute top-0 right-0 bottom-0 left-0" style="background: linear-gradient(rgb(0, 24, 113) 0%, rgb(0, 82, 194) 25%, rgb(74, 150, 228) 45%, rgb(217, 230, 245) 65%, rgb(255, 173, 125) 75%, rgb(247, 93, 77) 85%, rgb(204, 0, 61) 95%, rgb(82, 0, 61) 100%);">
+    </div>
+
+    <!-- Subtle Moving Glow Overlay -->
+    <div class="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none" style="background: radial-gradient(circle at 50% 100%, #38bdf8, transparent 60%); animation: aurora-move 15s ease-in-out infinite;">
+    </div>
+
+    <!-- Faint Top Gradient for depth -->
+    <div class="absolute top-0 left-0 right-0 h-[550px] bg-gradient-to-b from-[#020412] via-[#020412]/80 to-transparent opacity-95">
+    </div>
+  </div>
+
+  <!-- FIXED NAVBAR -->
+  <nav id="navbar" class="fixed z-50 transition-all duration-300 bg-[#020412]/20 border-white/5 border-b top-0 right-0 left-0 backdrop-blur-md">
+    <div class="flex h-16 max-w-7xl mx-auto px-6 items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-[#0B0D15] rounded-[11px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" x2="12" y1="19" y2="22"></line>
+            </svg>
+          </div>
+        </div>
+        <span class="font-manrope font-bold text-white text-lg tracking-tight">Zuki<span class="text-indigo-400 font-normal">.ai</span></span>
       </a>
 
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#pricing">Pricing</a>
-        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noreferrer" class="github-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      <!-- Desktop Links -->
+      <div class="hidden md:flex gap-8 text-sm font-medium text-slate-300 h-full items-center">
+        <!-- Capabilities Megamenu Trigger -->
+        <div class="relative group h-full flex items-center">
+          <button class="flex items-center gap-1.5 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors font-manrope outline-none">
+            Capabilities
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-white transition-colors duration-200 group-hover:rotate-180">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+
+          <!-- Megamenu Dropdown -->
+          <div class="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[620px] invisible opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out z-50 pointer-events-none group-hover:pointer-events-auto">
+            <div class="bg-[#020412]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-2 shadow-2xl ring-1 ring-white/5 grid grid-cols-2 gap-1 overflow-hidden">
+              <!-- Item 1: Real-time Voice -->
+              <a href="#how-it-works" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-indigo-400 group-hover/item:bg-indigo-500/20 group-hover/item:border-indigo-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Voice-First Desktop</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Sub-500ms voice transcription powered by Groq & Whisper.</div>
+                </div>
+              </a>
+
+              <!-- Item 2: Claude Computer Use -->
+              <a href="#architecture" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-cyan-400 group-hover/item:bg-cyan-500/20 group-hover/item:border-cyan-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                    <path d="M3 9h18"></path>
+                    <path d="M9 21V9"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Claude Computer Use</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Autonomous screen vision, mouse clicks, and typing via Anthropic.</div>
+                </div>
+              </a>
+
+              <!-- Item 3: Windows UIA Snapping -->
+              <a href="#features" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-emerald-400 group-hover/item:bg-emerald-500/20 group-hover/item:border-emerald-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="22" x2="18" y1="12" y2="12"></line>
+                    <line x1="6" x2="2" y1="12" y2="12"></line>
+                    <line x1="12" x2="12" y1="6" y2="2"></line>
+                    <line x1="12" x2="12" y1="22" y2="18"></line>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Windows UI Automation</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Coordinate-perfect element snapping using native Windows UIA tree.</div>
+                </div>
+              </a>
+
+              <!-- Item 4: Background Hermes Agent -->
+              <a href="#architecture" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-purple-400 group-hover/item:bg-purple-500/20 group-hover/item:border-purple-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Hermes Dual Reasoning</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Fast local action routing paired with deep cloud reasoning models.</div>
+                </div>
+              </a>
+
+              <!-- Item 5: Local Privacy Vault -->
+              <a href="#features" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-amber-400 group-hover/item:bg-amber-500/20 group-hover/item:border-amber-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                    <path d="m9 12 2 2 4-4"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Zero Telemetry Vault</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Encrypted SQLite DB, local API keys, and memory stored only on your PC.</div>
+                </div>
+              </a>
+
+              <!-- Item 6: Flutterwave Billing -->
+              <a href="#pricing" class="group/item relative flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-orange-400 group-hover/item:bg-orange-500/20 group-hover/item:border-orange-500/40 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                    <line x1="2" x2="22" y1="10" y2="10"></line>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-200 group-hover/item:text-white transition-colors font-manrope">Flutterwave Checkout</div>
+                  <div class="text-xs text-slate-500 mt-1 leading-relaxed group-hover/item:text-slate-400 font-manrope">Global cards, Apple Pay, Google Pay, and bank transfer support.</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#architecture" class="hover:text-white transition-colors font-manrope">Architecture</a>
+        <a href="#features" class="hover:text-white transition-colors font-manrope">Features</a>
+        <a href="#pricing" class="hover:text-white transition-colors font-manrope">Pricing</a>
+        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors font-manrope flex items-center gap-1.5">
+          GitHub
+          <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
           </svg>
-          <span>GitHub</span>
         </a>
-        <a href="#download" class="btn btn-sm btn-primary">Download Free</a>
+      </div>
+
+      <!-- Right Side CTA -->
+      <div class="flex gap-4 text-sm font-medium items-center">
+        <a href="#pricing" class="hidden sm:block hover:text-white transition-colors font-manrope">Sign in</a>
+        <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" class="hover:bg-white/15 transition-all text-white font-manrope bg-white/10 border border-white/10 rounded-full py-1.5 px-4 shadow-sm flex items-center gap-2">
+          <span>Get Zuki</span>
+          <span class="text-xs bg-indigo-500/30 text-indigo-300 px-1.5 py-0.5 rounded-full font-mono">v0.1</span>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="md:hidden hover:text-white transition-colors text-slate-300 p-1 z-50 relative" aria-label="Toggle menu">
+          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="nebula-internal-mobile-menu" class="fixed inset-x-0 top-[64px] z-40 h-[calc(100vh-64px)] bg-[#020412]/95 backdrop-blur-3xl hidden md:hidden flex-col px-6 pb-12 overflow-y-auto">
+        <div class="flex flex-col gap-6 text-lg font-medium text-slate-300 pt-6">
+          <a href="#how-it-works" class="hover:text-white transition-colors font-manrope mobile-link">How it Works</a>
+          <a href="#architecture" class="hover:text-white transition-colors font-manrope mobile-link">Architecture</a>
+          <a href="#features" class="hover:text-white transition-colors font-manrope mobile-link">Features</a>
+          <a href="#pricing" class="hover:text-white transition-colors font-manrope mobile-link">Pricing</a>
+          <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="hover:text-white transition-colors font-manrope">GitHub Repository</a>
+          <div class="h-px bg-white/10 w-full my-2"></div>
+          <a href="https://github.com/I-m-a-m-4/zuki/releases" class="w-full text-center py-3 rounded-full bg-white text-slate-900 font-semibold font-manrope">Download for Windows</a>
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <header class="hero">
-    <div class="container hero-container">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        <span>Windows Desktop Autonomous AI Companion</span>
+  <!-- MAIN HERO WRAPPER -->
+  <main class="overflow-hidden min-h-screen flex flex-col pt-28 pb-0 relative items-center">
+
+    <!-- Hero Content -->
+    <div class="animate-intro z-10 flex flex-col text-center max-w-4xl mx-auto px-6 items-center">
+
+      <!-- Badge Pill -->
+      <div class="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 backdrop-blur-sm shadow-sm hover:border-white/20 transition-all">
+        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+        <span class="font-manrope">Zuki Windows Desktop Agent v0.1.0 Released</span>
+        <span class="text-indigo-400 font-semibold font-mono">→</span>
       </div>
 
-      <h1 class="hero-title">
-        Talk to your PC.<br />
-        <span class="gradient-text">She sees, points, and actually acts.</span>
+      <!-- Main Headline with Reflective Title Loop -->
+      <h1 class="md:text-7xl leading-[1.1] text-4xl font-medium tracking-tight mb-6">
+        <span class="title-reflection block sm:inline font-manrope font-medium">The all in one</span> <br class="hidden sm:block">
+        <span class="bg-clip-text font-medium text-transparent font-manrope bg-gradient-to-r from-indigo-200 via-white to-cyan-200">voice AI desktop companion</span>
       </h1>
 
-      <p class="hero-subtitle">
-        Hold <code>Ctrl+Alt+M</code> and speak. Zuki looks at your Windows screen, flies directly to UI buttons with pixel accuracy, and takes over multi-step workflows using Claude Computer Use and Groq.
+      <p class="leading-relaxed md:text-xl text-base text-slate-50 font-manrope opacity-90 max-w-2xl mx-auto mb-8">
+        Speak naturally to control your Windows PC. Powered by Claude 3.5 Sonnet computer-use, Groq ultra-fast Whisper, and Hermes dual-agent reasoning.
       </p>
 
-      <div class="hero-cta-group">
-        <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Setup-Zuki.exe" class="btn btn-lg btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 items-center">
+        <!-- Primary Button -->
+        <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" class="group hover:text-indigo-900 flex gap-4 hover:shadow-[0_8px_30px_rgba(99,102,241,0.25)] transition-all duration-300 text-slate-800 bg-white rounded-full py-3 px-6 relative shadow-lg items-center font-semibold font-manrope">
+          <svg class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
           </svg>
-          <span>Download Setup-Zuki.exe</span>
-        </a>
-        <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Zuki.msi" class="btn btn-lg btn-secondary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <span class="text-sm tracking-tight text-slate-900">Download for Windows</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform duration-300 text-indigo-600">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
           </svg>
-          <span>Download .MSI Installer</span>
+        </a>
+
+        <!-- Secondary Button -->
+        <a href="#architecture" class="hover:bg-white/10 transition-colors flex group text-sm text-white font-manrope bg-white/5 border-white/10 border rounded-full py-3 px-6 gap-2 items-center">
+          <span>Explore Architecture</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-white transition-colors">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </a>
       </div>
 
-      <div class="hero-spec-pills">
-        <span class="pill">⚡ Windows 10 & 11 (64-bit)</span>
-        <span class="pill">🧠 Claude 3.5 + Groq + OpenRouter</span>
-        <span class="pill">🛡️ 100% Reversible File Operations</span>
-        <span class="pill">🔒 Open Source MIT</span>
+    </div>
+
+    <!-- APPLICATION UI MOCKUP WINDOW -->
+    <div class="animate-intro md:px-8 w-full max-w-6xl mt-12 mb-20 px-4 relative perspective-1000">
+
+      <!-- Glow Under the Mockup -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-indigo-500/25 blur-[90px] -z-10 rounded-full">
       </div>
 
-      <!-- Live Mockup / Desktop Experience Preview -->
-      <div class="hero-mockup">
-        <div class="window-frame">
-          <div class="window-header">
-            <div class="window-dots">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
+      <!-- The Interface Window -->
+      <div class="relative bg-[#0F111A]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10">
+
+        <!-- Interface Window Header -->
+        <div class="h-14 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
+          <div class="flex items-center gap-4">
+            <!-- Window Control Dots -->
+            <div class="flex gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/30 border border-red-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/30 border border-yellow-500/60"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/30 border border-green-500/60"></span>
             </div>
-            <div class="window-title">Zuki Active Overlay · Windows 11 Desktop</div>
-            <div class="hotkey-indicator">Hold [Ctrl+Alt+M]</div>
-          </div>
-          <div class="window-viewport">
-            <div class="desktop-wallpaper">
-              <!-- Visual Mock UI Elements -->
-              <div class="mock-card card-excel">
-                <div class="mock-header">Q3 Financial Report.xlsx</div>
-                <div class="mock-grid">
-                  <div class="mock-row"></div>
-                  <div class="mock-row"></div>
-                  <div class="mock-row"></div>
-                </div>
-              </div>
 
-              <!-- Animated Zuki Pointer Buddy -->
-              <div class="zuki-pointer" id="zukiPointer">
-                <div class="pointer-bubble" id="pointerBubble">
-                  <span class="bubble-icon">🧤</span>
-                  <span class="bubble-text">"Found the Export button! Clicking it now…"</span>
-                </div>
-                <div class="pointer-hand"></div>
-                <div class="pointer-ping"></div>
+            <!-- Breadcrumbs -->
+            <div class="flex items-center gap-2 text-xs font-medium text-slate-400">
+              <div class="flex items-center gap-1.5 p-1 px-2 rounded hover:bg-white/5 transition-colors cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                </svg>
+                <span class="text-slate-300 font-manrope">Zuki Core</span>
               </div>
-
-              <!-- Live Voice Waveform -->
-              <div class="voice-bar">
-                <div class="voice-status">
-                  <span class="pulse-indicator"></span>
-                  <span id="voiceStatusText">Listening: "Walk me through this report and export it"</span>
-                </div>
-                <div class="voice-waves">
-                  <span class="wave"></span><span class="wave"></span><span class="wave"></span>
-                  <span class="wave"></span><span class="wave"></span><span class="wave"></span>
-                </div>
+              <span class="text-slate-600 font-manrope">/</span>
+              <div class="flex items-center gap-1.5 p-1 px-2 rounded hover:bg-white/5 transition-colors cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                </svg>
+                <span class="text-slate-300 font-manrope">Windows Desktop Agent</span>
+              </div>
+              <span class="text-slate-600 font-manrope">/</span>
+              <div class="flex items-center gap-1.5 bg-green-900/20 border border-green-500/30 text-green-400 px-2 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 sonar-emitter"></span>
+                <span class="font-manrope text-[11px] font-semibold">Active Engine</span>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </header>
 
-  <!-- Interactive Voice Playground Section -->
-  <section class="section interactive-section">
-    <div class="container">
-      <div class="section-badge">Try The Prompts</div>
-      <h2 class="section-title">What can you say to Zuki?</h2>
-      <p class="section-subtitle">Click any command below to see how Zuki responds on your desktop in real-time.</p>
-
-      <div class="prompts-grid">
-        <button class="prompt-chip active" data-action="tour" data-reply="I see your Visual Studio Code and browser window. Let me point out your failing test in line 42.">
-          "Explain my screen"
-        </button>
-        <button class="prompt-chip" data-action="act" data-reply="Opening Spotify and searching for Lo-Fi Chill playlist right away.">
-          "Open Spotify and play Lo-Fi"
-        </button>
-        <button class="prompt-chip" data-action="organize" data-reply="Scanning Desktop: Moved 14 screenshots into /Screenshots and sorted icons alphabetically. Run 'zuki undo' to revert.">
-          "Clean up my desktop"
-        </button>
-        <button class="prompt-chip" data-action="background" data-reply="Delegating to background Hermes agent. I'll research the market competitors and save a full report in research.md.">
-          "Research agent frameworks in the background"
-        </button>
-      </div>
-
-      <div class="simulation-box">
-        <div class="sim-response">
-          <div class="sim-avatar">🧤</div>
-          <div class="sim-content">
-            <div class="sim-name">Zuki Spoken Answer:</div>
-            <div class="sim-text" id="simText">"I see your Visual Studio Code and browser window. Let me point out your failing test in line 42."</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Core Features Section -->
-  <section id="features" class="section features-section">
-    <div class="container">
-      <div class="section-badge">Superpowers</div>
-      <h2 class="section-title">Built for Windows. Powered by SOTA AI.</h2>
-      <p class="section-subtitle">No browser sandbox limitations. Zuki operates natively with real Windows UI Automation and Win32 controls.</p>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">👁️</div>
-          <h3>Pixel-Accurate UI Snapping</h3>
-          <p>Unlike raw vision guesses, Zuki inspects the Windows UI Automation (UIA) tree to snap directly onto native buttons, text inputs, and menus with 100% click fidelity.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Groq & Deepgram Voice</h3>
-          <p>Push-to-talk with streaming STT powered by Deepgram or Groq Whisper-large-v3, responding in sub-seconds with realistic Edge-TTS narration.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🦾</div>
-          <h3>Hands-On Computer Use</h3>
-          <p>Direct actuation via Claude Computer Use. Zuki navigates apps, types text, and finishes tasks, guarded by an emergency <code>Esc</code> abort key.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🗂️</div>
-          <h3>Journaled File Organizer</h3>
-          <p>Tidies cluttered Desktops and Downloads with single-step LLM classification. Every operation is journaled and 100% reversible via <code>zuki undo</code>.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📦</div>
-          <h3>Background Hermes Agents</h3>
-          <p>"Go research X and report back." Background agents run asynchronously with DDGS search, delivering real files and syncing with connected Notion/Composio MCP tools.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🧠</div>
-          <h3>Learned Voice Skills</h3>
-          <p>Teach Zuki custom routines simply by voice: <em>"Save this as my morning routine"</em>. Skills are saved as open, PR-able <code>SKILL.md</code> files.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing / Commercialization Section -->
-  <section id="pricing" class="section pricing-section">
-    <div class="container">
-      <div class="section-badge">Plans & Access</div>
-      <h2 class="section-title">Simple, transparent pricing.</h2>
-      <p class="section-subtitle">Start completely free, or unlock unlimited autonomous desktop hours with Zuki Pro.</p>
-
-      <div class="pricing-grid">
-        <!-- Free Plan -->
-        <div class="pricing-card">
-          <div class="plan-header">
-            <h3>Community Free</h3>
-            <div class="plan-price">$0 <span>/ month</span></div>
-            <p class="plan-desc">Perfect for everyday screen Q&A and tidy desktop management.</p>
-          </div>
-          <ul class="plan-features">
-            <li>✓ Voice-activated desktop companion</li>
-            <li>✓ Screen tour & element pointing</li>
-            <li>✓ Heuristic file organizer + undo</li>
-            <li>✓ 200 daily Claude & Groq requests</li>
-            <li>✓ Local Ollama model support</li>
-          </ul>
-          <a href="#download" class="btn btn-secondary btn-block">Download Free</a>
-        </div>
-
-        <!-- Pro Plan -->
-        <div class="pricing-card pro-card">
-          <div class="pro-ribbon">POPULAR</div>
-          <div class="plan-header">
-            <h3>Zuki Pro ✨</h3>
-            <div class="plan-price">
-              <span class="currency-toggle">₦5,000 NGN</span> <span class="alt-price">or $10 USD</span>
-              <span class="period">/ month</span>
+          <!-- Window Search / Actions -->
+          <div class="flex items-center gap-3">
+            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs text-slate-400 w-52 justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="font-manrope">Voice or Prompt...</span>
+              </div>
+              <span class="text-[10px] border border-white/10 rounded px-1 font-mono text-slate-400">Ctrl+Space</span>
             </div>
-            <p class="plan-desc">For professionals, builders, and power users who want autonomous hands.</p>
+            <!-- Status Badge -->
+            <div class="w-7 h-7 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-xs text-indigo-300 font-semibold font-manrope">
+              Z
+            </div>
           </div>
-          <ul class="plan-features">
-            <li>✓ <b>Unlimited</b> Claude 3.5 Sonnet Computer Use</li>
-            <li>✓ Ultra-fast Groq transcription & routing</li>
-            <li>✓ Background Hermes research agents</li>
-            <li>✓ Model Context Protocol (MCP) integrations (Notion, Composio, Slack)</li>
-            <li>✓ Priority model queues & zero rate limits</li>
-            <li>✓ Secure payment via Flutterwave (Card, Bank Transfer, USSD)</li>
-          </ul>
-          <a href="#download" class="btn btn-primary btn-block">Upgrade in App</a>
         </div>
+
+        <!-- Interface Tabs -->
+        <div class="flex border-white/5 border-b px-6 gap-6 items-center bg-black/20">
+          <button class="py-3 text-sm text-white border-b-2 border-indigo-500 font-manrope font-medium">Live Pipeline</button>
+          <button class="py-3 text-sm text-slate-500 hover:text-slate-300 transition-colors font-manrope">Computer Vision</button>
+          <button class="py-3 text-sm text-slate-500 hover:text-slate-300 transition-colors font-manrope">Execution Tree</button>
+          <button class="py-3 text-sm text-slate-500 hover:text-slate-300 transition-colors font-manrope">API & Quota</button>
+        </div>
+
+        <!-- Interface Content & Live Node Graph -->
+        <div class="md:p-8 min-h-[460px] bg-[#0B0D15] relative overflow-hidden flex items-center justify-center p-4">
+
+          <!-- Ambient Light Beams -->
+          <div class="absolute top-[-20%] left-[20%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen animate-pulse"></div>
+          <div class="absolute bottom-[-20%] right-[20%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
+
+          <!-- Grid Background -->
+          <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0 opacity-40"></div>
+
+          <!-- Connecting Noodles (SVG Layer) -->
+          <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1" stop-opacity="0"></stop>
+                <stop offset="50%" stop-color="#818cf8" stop-opacity="0.8"></stop>
+                <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <!-- Path: Voice Input -> Core Reasoning -->
+            <path d="M 320 230 C 400 230, 400 230, 460 230" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" class="hidden md:block"></path>
+            <path d="M 320 230 C 400 230, 400 230, 460 230" stroke="url(#beam-gradient)" stroke-width="2" fill="none" class="hidden md:block noodle-path" stroke-dasharray="10 10"></path>
+
+            <!-- Path: Core Reasoning -> OS Execution -->
+            <path d="M 720 230 C 780 230, 780 180, 840 180" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" class="hidden md:block"></path>
+            <path d="M 720 230 C 780 230, 780 180, 840 180" stroke="url(#beam-gradient)" stroke-width="2" fill="none" class="hidden md:block noodle-path" stroke-dasharray="8 8"></path>
+
+            <!-- Path: Core Reasoning -> Local Memory Cache -->
+            <path d="M 720 230 C 780 230, 780 340, 840 340" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" class="hidden md:block"></path>
+            <path d="M 720 230 C 780 230, 780 340, 840 340" stroke="url(#beam-gradient)" stroke-width="2" fill="none" class="hidden md:block noodle-path" stroke-dasharray="8 8" style="animation-duration: 3s;"></path>
+          </svg>
+
+          <!-- 3-Column Pipeline Architecture Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl relative z-10 items-start">
+
+            <!-- Column 1: Voice & Perception -->
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-2 text-slate-400 text-xs font-medium pl-1 uppercase tracking-wider opacity-80">
+                <svg class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                </svg>
+                <span class="font-manrope">Perception & Audio</span>
+              </div>
+
+              <!-- Card: Groq Whisper Stream -->
+              <div class="flashlight-card bg-[#11131A] border border-white/5 rounded-xl p-0 shadow-lg hover:border-white/10 transition-colors overflow-hidden">
+                <div class="p-4 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
+                  <h3 class="text-slate-200 text-sm font-semibold font-manrope">Audio Ingestion</h3>
+                  <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></span>
+                    <span class="text-[10px] text-emerald-400 font-manrope">16kHz Listening</span>
+                  </div>
+                </div>
+                <div class="p-4 space-y-3">
+                  <div class="flex justify-between items-center text-xs group">
+                    <div class="flex items-center gap-2 text-slate-400 group-hover:text-slate-300 transition-colors font-manrope">
+                      <span class="text-indigo-400 font-mono">STT:</span> Groq Whisper Large
+                    </div>
+                    <span class="text-emerald-400 font-mono text-[11px]">180ms</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs group">
+                    <div class="flex items-center gap-2 text-slate-400 group-hover:text-slate-300 transition-colors font-manrope">
+                      <span class="text-cyan-400 font-mono">HOTKEY:</span> Ctrl + Shift + Space
+                    </div>
+                    <span class="text-indigo-400/90 font-manrope">Bound</span>
+                  </div>
+                  <!-- Audio Waveform Simulation -->
+                  <div class="pt-2 flex items-center justify-between gap-1 h-6">
+                    <span class="w-1 bg-indigo-500/40 rounded-full h-2 animate-pulse"></span>
+                    <span class="w-1 bg-indigo-500/70 rounded-full h-4 animate-pulse" style="animation-delay: 100ms;"></span>
+                    <span class="w-1 bg-cyan-400 rounded-full h-6 animate-pulse" style="animation-delay: 200ms;"></span>
+                    <span class="w-1 bg-indigo-400 rounded-full h-5 animate-pulse" style="animation-delay: 300ms;"></span>
+                    <span class="w-1 bg-indigo-500/60 rounded-full h-3 animate-pulse" style="animation-delay: 150ms;"></span>
+                    <span class="w-1 bg-cyan-400/80 rounded-full h-5 animate-pulse" style="animation-delay: 250ms;"></span>
+                    <span class="w-1 bg-indigo-500/40 rounded-full h-2 animate-pulse"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card: Screen Grabber -->
+              <div class="flashlight-card bg-[#11131A] border border-white/5 rounded-xl p-4 shadow-lg hover:border-white/10 transition-colors">
+                <div class="flex justify-between items-center mb-3">
+                  <h3 class="text-slate-200 text-sm font-semibold font-manrope">Screen Capture</h3>
+                  <span class="text-[10px] text-slate-400 font-mono bg-white/5 px-2 py-0.5 rounded">DXGI Desktop Dup</span>
+                </div>
+                <div class="p-2.5 rounded bg-white/5 border border-white/5 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                    <span class="text-xs text-slate-300 font-mono">1920x1080 @ 60 FPS</span>
+                  </div>
+                  <span class="text-[10px] text-emerald-400 font-mono">Zero Lag</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Dual-Layer Reasoning Engine -->
+            <div class="flex flex-col gap-4 mt-8 md:mt-0 relative">
+              <div class="absolute inset-0 bg-indigo-500/10 blur-3xl -z-10 rounded-full"></div>
+
+              <div class="flex items-center gap-2 text-slate-400 text-xs font-medium pl-1 uppercase tracking-wider opacity-80">
+                <svg class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="12 6 12 12 16 14"></polygon>
+                </svg>
+                <span class="font-manrope">Zuki Core Router</span>
+              </div>
+
+              <!-- Card: Central Brain (Claude 3.5 + Hermes) -->
+              <div class="flashlight-card bg-[#11131A] border border-indigo-500/30 rounded-xl p-0 shadow-2xl hover:border-indigo-500/50 transition-all duration-300">
+                <div class="p-4 border-b border-white/5 bg-white/[0.02] flex justify-between items-center">
+                  <div class="flex items-center gap-3">
+                    <span class="text-white text-sm font-bold tracking-tight font-manrope">Dual-Agent Engine</span>
+                    <span class="text-[10px] text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full border border-indigo-500/30 font-mono">Hybrid</span>
+                  </div>
+                  <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                </div>
+                <div class="p-5 space-y-4">
+                  <div class="flex justify-between items-center text-xs">
+                    <div class="flex items-center gap-2 text-slate-400 font-manrope">
+                      <svg class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                      </svg>
+                      Primary Vision
+                    </div>
+                    <span class="text-slate-200 font-mono font-medium">Claude 3.5 Sonnet</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs">
+                    <div class="flex items-center gap-2 text-slate-400 font-manrope">
+                      <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" x2="22" y1="12" y2="12"></line>
+                      </svg>
+                      Fast Dispatcher
+                    </div>
+                    <span class="text-slate-200 font-mono font-medium">Hermes 70B Local/API</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs">
+                    <div class="flex items-center gap-2 text-slate-400 font-manrope">
+                      <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                      </svg>
+                      Decision Latency
+                    </div>
+                    <span class="text-emerald-400 font-mono font-medium">~320ms avg</span>
+                  </div>
+
+                  <!-- Mini Live Log -->
+                  <div class="p-2.5 rounded bg-black/40 border border-white/5 font-mono text-[11px] text-slate-400 space-y-1">
+                    <div class="text-cyan-400">› Voice: "Open Excel and format column B"</div>
+                    <div class="text-slate-300">✔ UIA matched [excel.exe] window</div>
+                    <div class="text-indigo-400">✔ Clicking cell B1: (428, 192)</div>
+                  </div>
+                </div>
+
+                <div class="p-3 bg-white/[0.02] border-t border-white/5">
+                  <button class="w-full text-xs text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 py-1.5 rounded transition-colors flex items-center justify-center gap-1.5 font-manrope">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Custom Skill Pipeline Loaded
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3: Windows Execution & Memory -->
+            <div class="flex flex-col gap-4 mt-16 md:mt-0">
+              <div class="flex items-center gap-2 text-slate-400 text-xs font-medium pl-1 uppercase tracking-wider opacity-80">
+                <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+                  <line x1="8" x2="16" y1="21" y2="21"></line>
+                  <line x1="12" x2="12" y1="17" y2="21"></line>
+                </svg>
+                <span class="font-manrope">Windows OS Driver</span>
+              </div>
+
+              <!-- Card: OS Action Executor -->
+              <div class="flashlight-card bg-[#11131A] border border-white/5 rounded-xl p-0 shadow-lg hover:border-white/10 transition-colors">
+                <div class="p-4 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
+                  <div class="flex items-center gap-2">
+                    <span class="text-white text-sm font-semibold font-manrope">UIA Automation</span>
+                    <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">Native</span>
+                  </div>
+                  <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+                </div>
+                <div class="p-4 space-y-3 text-xs">
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-manrope">Execution Layer</span>
+                    <span class="text-slate-200 font-mono">Windows pywinauto + UIA</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-manrope">Safety Sandbox</span>
+                    <span class="text-emerald-400 font-manrope font-medium">Safe Mode Enabled</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-manrope">Emergency Stop</span>
+                    <span class="text-amber-400 font-mono">Esc x 3</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card: Local SQLite Memory -->
+              <div class="flashlight-card bg-[#11131A] border border-white/5 rounded-xl p-3 shadow-lg hover:border-white/10 transition-colors opacity-85 hover:opacity-100">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+                    </svg>
+                    <span class="text-xs text-white font-manrope font-semibold">Local SQLite Memory</span>
+                  </div>
+                  <span class="text-[10px] text-purple-300 font-mono">Encrypted</span>
+                </div>
+                <div class="flex justify-between items-center text-xs text-slate-400 font-mono">
+                  <span>Session History</span>
+                  <span class="text-slate-200">100% On-Device</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom Floating Pill -->
+          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+            <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="flex items-center gap-2 bg-white text-slate-900 text-xs px-5 py-2.5 rounded-full hover:bg-slate-100 transition-all shadow-2xl shadow-indigo-500/30 ring-4 ring-black/40 font-manrope font-bold">
+              <svg class="w-3.5 h-3.5 text-indigo-600 fill-current" viewBox="0 0 24 24">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Explore GitHub Repository</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Interface Window Footer -->
+        <div class="h-8 bg-[#0D1117] border-t border-white/5 flex items-center justify-between px-4 text-[10px] text-slate-500 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Windows 10 / 11 Compatible (x64)</span>
+          </div>
+          <div class="flex gap-4">
+            <span>Python 3.11+</span>
+            <span>PySide6 Qt</span>
+            <span>Zero Telemetry</span>
+          </div>
+        </div>
+
       </div>
+
     </div>
-  </section>
 
-  <!-- Download & Get Started Section -->
-  <section id="download" class="section download-section">
-    <div class="container">
-      <div class="download-box">
-        <h2 class="download-title">Ready to put your PC on autopilot?</h2>
-        <p class="download-subtitle">Download Zuki for Windows 10 & 11. No Python setup required.</p>
+    <!-- WHITE SECTION WITH HIGH-CONTRAST LAYOUT -->
+    <div class="-translate-x-1/2 text-slate-900 bg-white w-screen border-0 border-t mt-0 pt-24 pb-20 relative left-1/2">
 
-        <div class="download-buttons">
-          <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Setup-Zuki.exe" class="btn btn-lg btn-primary">
-            Download Setup-Zuki.exe
-          </a>
-          <a href="https://github.com/I-m-a-m-4/zuki/releases/latest/download/Zuki.msi" class="btn btn-lg btn-secondary">
-            Download Zuki.msi
-          </a>
-        </div>
+      <!-- Background Texture Grid -->
+      <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
 
-        <div class="download-note">
-          Also available on GitHub Actions Releases · Microsoft Store verification in progress.
+      <!-- PARTNERS / TECH STACK SECTION -->
+      <div class="z-10 text-center max-w-7xl mx-auto mb-32 px-6 relative">
+        <p class="text-xs text-slate-500 mb-10 uppercase tracking-widest font-manrope font-semibold">
+          Powered by industry-leading AI models and Windows automation technologies
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 opacity-75 hover:opacity-100 transition-opacity">
+          <!-- Anthropic Claude -->
+          <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
+            <svg class="w-6 h-6 text-orange-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13H5.5L12 6.5z"/>
+            </svg>
+            <span>Anthropic Claude 3.5</span>
+          </div>
+
+          <!-- Groq -->
+          <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
+            <svg class="w-6 h-6 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 12h8" stroke="white" stroke-width="2"/>
+            </svg>
+            <span>Groq LPU Fast STT</span>
+          </div>
+
+          <!-- Microsoft Windows -->
+          <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
+            <svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+            </svg>
+            <span>Windows UIA Native</span>
+          </div>
+
+          <!-- Flutterwave -->
+          <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
+            <svg class="w-6 h-6 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <span>Flutterwave Payments</span>
+          </div>
+
+          <!-- GitHub -->
+          <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
+            <svg class="w-5 h-5 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span>Open Source Repository</span>
+          </div>
         </div>
       </div>
+
+      <!-- FEATURES SPLIT SECTION -->
+      <section id="features" class="max-w-7xl mx-auto px-6 relative z-10 mb-32">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32 relative">
+
+          <!-- Center Vertical Line (Desktop Only) -->
+          <div class="absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 hidden lg:block -translate-x-1/2"></div>
+          <!-- Center Top & Bottom Dots -->
+          <div class="absolute left-1/2 top-12 w-2.5 h-2.5 rounded-full bg-indigo-500 hidden lg:block -translate-x-1/2 shadow-sm ring-4 ring-white"></div>
+          <div class="absolute left-1/2 bottom-12 w-2.5 h-2.5 rounded-full bg-cyan-500 hidden lg:block -translate-x-1/2 shadow-sm ring-4 ring-white"></div>
+
+          <!-- Feature 1: Fast Start & Voice Ingestion -->
+          <div class="flex flex-col gap-8 group">
+            <div class="flex flex-col gap-4 max-w-lg">
+              <div class="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 mb-2 shadow-sm">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <h3 class="text-3xl text-slate-900 tracking-tight font-manrope font-bold">Control your PC under 500 milliseconds</h3>
+              <p class="text-lg text-slate-600 leading-relaxed font-manrope">
+                No complex scripting or CLI training. Press <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded font-mono text-sm text-slate-800">Ctrl + Shift + Space</kbd>, speak what you need, and Zuki's Groq speech pipeline transcribes and executes instantly.
+              </p>
+            </div>
+
+            <!-- Visual Card 1 -->
+            <div class="relative mt-4">
+              <!-- Dashed Connector -->
+              <svg class="absolute -top-12 left-8 h-12 w-px overflow-visible text-slate-300 hidden md:block" stroke="currentColor" stroke-width="1.5">
+                <path d="M0.5 0v48" stroke-dasharray="4 4"></path>
+                <circle cx="0.5" cy="48" r="3" fill="white" stroke="currentColor" stroke-width="1.5"></circle>
+              </svg>
+
+              <div class="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-6 relative overflow-hidden transition-transform duration-500 hover:-translate-y-1">
+                <div class="flex justify-between items-center mb-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                    <h4 class="text-slate-900 font-semibold font-manrope">Live Voice Prompt</h4>
+                  </div>
+                  <span class="text-xs bg-indigo-50 text-indigo-700 font-mono font-medium px-2 py-1 rounded-full">Speech-to-Action</span>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                    <div class="text-xs text-slate-400 font-mono mb-1">USER VOICE INPUT:</div>
+                    <div class="text-sm font-semibold text-slate-800 font-manrope">"Summarize this open PDF and draft an email to Bello in Outlook"</div>
+                  </div>
+
+                  <div class="p-3 bg-indigo-50/60 border border-indigo-100 rounded-xl space-y-2">
+                    <div class="flex items-center justify-between text-xs text-indigo-700 font-mono">
+                      <span>AUTOMATION PLAN</span>
+                      <span>3 STEPS GENERATED</span>
+                    </div>
+                    <div class="text-xs text-slate-700 space-y-1 font-mono">
+                      <div>1. Read active Acrobat window text content</div>
+                      <div>2. Synthesize key insights via Claude 3.5</div>
+                      <div>3. Launch Outlook, create draft, fill recipient</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2: Coordinate-Perfect UIA Execution -->
+          <div class="flex flex-col gap-8 group lg:mt-12">
+            <div class="flex flex-col gap-4 max-w-lg">
+              <div class="w-11 h-11 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 mb-2 shadow-sm">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </div>
+              <h3 class="text-3xl text-slate-900 tracking-tight font-manrope font-bold">Native Windows UIA & Vision Snapping</h3>
+              <p class="text-lg text-slate-600 leading-relaxed font-manrope">
+                Unlike primitive screen recorders that guess pixel locations, Zuki interrogates the native Windows UI Automation (UIA) tree for exact bounding boxes, buttons, inputs, and tab controls.
+              </p>
+            </div>
+
+            <!-- Visual Card 2 -->
+            <div class="relative mt-4">
+              <!-- Dashed Connector -->
+              <svg class="absolute -top-12 left-8 h-12 w-px overflow-visible text-slate-300 hidden md:block" stroke="currentColor" stroke-width="1.5">
+                <path d="M0.5 0v48" stroke-dasharray="4 4"></path>
+                <circle cx="0.5" cy="48" r="3" fill="white" stroke="currentColor" stroke-width="1.5"></circle>
+              </svg>
+
+              <div class="flex flex-col gap-4 relative">
+                <!-- Card: App Execution Tree -->
+                <div class="bg-white rounded-2xl border border-indigo-200 p-5 shadow-lg shadow-indigo-500/5 relative z-20 group-hover:translate-x-1 transition-transform duration-500">
+                  <div class="flex items-start justify-between">
+                    <div class="flex gap-3">
+                      <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                          <line x1="3" x2="21" y1="9" y2="9"></line>
+                        </svg>
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-2 mb-1">
+                          <h4 class="text-slate-900 text-sm font-bold font-manrope">Outlook.exe (Mail Client)</h4>
+                          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                          <span class="text-emerald-600 text-xs font-semibold font-manrope">Focused</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-slate-500 font-mono">
+                          <span>Target: Button[Name="New Email"]</span>
+                          <span>•</span>
+                          <span class="text-indigo-600">BoundingBox: (140, 72, 85, 32)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Secondary Card -->
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 opacity-90 scale-95 origin-top relative z-10 hover:opacity-100 hover:scale-100 transition-all duration-300">
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2 font-mono text-slate-700">
+                      <svg class="w-4 h-4 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 14 14"></polyline>
+                      </svg>
+                      <span>Emergency Safe Exit: Press ESC 3 times to halt actions instantly</span>
+                    </div>
+                    <span class="text-emerald-600 font-semibold font-manrope">Active</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS ARCHITECTURE SECTION -->
+      <section id="architecture" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Engineering Architecture</span>
+          <h2 class="text-4xl font-extrabold text-slate-900 mt-4 tracking-tight font-manrope">How Zuki operates your desktop</h2>
+          <p class="text-slate-600 mt-3 text-lg font-manrope">A purpose-built hybrid client uniting ultra-fast local Windows hooks with frontier multimodal models.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Step 1 -->
+          <div class="bg-slate-50/80 rounded-2xl p-8 border border-slate-200 hover:border-indigo-400 hover:shadow-xl transition-all">
+            <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg mb-6 font-mono shadow-md shadow-indigo-600/20">
+              01
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 font-manrope">Hotkey & Audio Stream</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-manrope">
+              Global keyboard listener catches <code class="text-indigo-600 font-mono">Ctrl+Shift+Space</code> or microphone activity. Raw 16kHz audio streams to Groq's Whisper LPU for near-instant transcription in under 200ms.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-slate-50/80 rounded-2xl p-8 border border-slate-200 hover:border-cyan-400 hover:shadow-xl transition-all">
+            <div class="w-12 h-12 rounded-xl bg-cyan-600 text-white flex items-center justify-center font-bold text-lg mb-6 font-mono shadow-md shadow-cyan-600/20">
+              02
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 font-manrope">Visual & UIA Parsing</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-manrope">
+              Zuki grabs high-res desktop screenshots through DXGI and simultaneously inspects the Windows UI Automation tree to identify clickable buttons, active inputs, and window hierarchies.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-slate-50/80 rounded-2xl p-8 border border-slate-200 hover:border-emerald-400 hover:shadow-xl transition-all">
+            <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg mb-6 font-mono shadow-md shadow-emerald-600/20">
+              03
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 font-manrope">Computer-Use Execution</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-manrope">
+              Claude 3.5 Sonnet computer-use calculates the exact coordinate trajectory, issuing safe mouse moves, clicks, keyboard typing, and file operations with continuous visual feedback.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING & FLUTTERWAVE CHECKOUT SECTION -->
+      <section id="pricing" class="max-w-7xl mx-auto px-6 mb-32">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Simple, Transparent Pricing</span>
+          <h2 class="text-4xl font-extrabold text-slate-900 mt-4 tracking-tight font-manrope">Get started for free, upgrade when needed</h2>
+          <p class="text-slate-600 mt-3 text-lg font-manrope">Pay easily in Naira (NGN) or USD via Flutterwave with credit card, Apple Pay, or bank transfer.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <!-- Free Plan -->
+          <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-slate-900 font-manrope">Community Edition</h3>
+                <span class="text-xs font-mono bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full">Open Source</span>
+              </div>
+              <p class="text-slate-600 text-sm mb-6 font-manrope">Bring your own Anthropic & Groq API keys. Unlimited local actions on your Windows machine.</p>
+              
+              <div class="mb-6">
+                <span class="text-4xl font-extrabold text-slate-900 font-manrope">₦0</span>
+                <span class="text-slate-500 font-manrope"> / forever free</span>
+              </div>
+
+              <div class="space-y-3 mb-8 text-sm text-slate-700 font-manrope">
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Full Windows Desktop Client</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Voice Hotkey & Real-Time Whisper</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Bring Your Own API Keys (BYOK)</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Zero Telemetry / 100% Local SQLite</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="w-full text-center py-3.5 rounded-full border border-slate-300 text-slate-800 font-semibold font-manrope hover:bg-slate-100 transition-colors">
+              Clone on GitHub
+            </a>
+          </div>
+
+          <!-- Pro Plan (Flutterwave Integrated) -->
+          <div class="bg-slate-900 text-white rounded-3xl p-8 border border-indigo-500/50 shadow-2xl shadow-indigo-500/20 flex flex-col justify-between relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute -top-24 -right-24 w-60 h-60 bg-indigo-500/30 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white font-manrope">Zuki Pro Cloud</h3>
+                <span class="text-xs font-mono bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 px-2.5 py-1 rounded-full">Hosted Compute</span>
+              </div>
+              <p class="text-slate-300 text-sm mb-6 font-manrope">Includes hosted Claude 3.5 Sonnet computer-use tokens, Hermes background agents, and priority sync.</p>
+              
+              <div class="mb-6">
+                <span class="text-4xl font-extrabold text-white font-manrope">₦5,000</span>
+                <span class="text-slate-400 font-manrope"> / month ($10 USD)</span>
+              </div>
+
+              <div class="space-y-3 mb-8 text-sm text-slate-300 font-manrope">
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>No Anthropic API Key Required</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>High-Speed Dedicated Inference</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Hermes Background Continuous Agents</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Priority Support & Auto-Updates</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flutterwave Pay Button -->
+            <button id="pay-pro-btn" onclick="openFlutterwaveCheckout()" class="w-full py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 text-white font-bold font-manrope hover:opacity-95 shadow-lg shadow-indigo-500/40 transition-all flex items-center justify-center gap-2">
+              <span>Subscribe with Flutterwave</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUICK INSTALLATION CODE -->
+      <section class="max-w-4xl mx-auto px-6 mb-32">
+        <div class="bg-[#0B0D15] rounded-2xl p-6 border border-white/10 text-white">
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-xs font-mono text-slate-400">Run locally from source</span>
+            <span class="text-xs text-indigo-400 font-mono">Powershell / CMD</span>
+          </div>
+          <div class="bg-black/60 rounded-xl p-4 font-mono text-sm text-slate-300 space-y-2 overflow-x-auto">
+            <div><span class="text-slate-500"># 1. Clone the repository</span></div>
+            <div class="text-cyan-400">git clone https://github.com/I-m-a-m-4/zuki.git</div>
+            <div><span class="text-slate-500"># 2. Install dependencies</span></div>
+            <div class="text-cyan-400">cd zuki && pip install -r requirements.txt</div>
+            <div><span class="text-slate-500"># 3. Launch desktop companion</span></div>
+            <div class="text-emerald-400">python -m zuki.shell.main</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ SECTION -->
+      <section class="max-w-3xl mx-auto px-6 mb-32">
+        <h2 class="text-3xl font-extrabold text-slate-900 text-center mb-10 font-manrope">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          <div class="border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
+            <h4 class="font-bold text-slate-900 font-manrope text-base mb-1">Which versions of Windows are supported?</h4>
+            <p class="text-slate-600 text-sm font-manrope">Zuki is built natively for 64-bit Windows 10 and Windows 11 with full support for the modern Windows UI Automation API.</p>
+          </div>
+          <div class="border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
+            <h4 class="font-bold text-slate-900 font-manrope text-base mb-1">Is my screen recorded or sent to third parties?</h4>
+            <p class="text-slate-600 text-sm font-manrope">Never without your command. Screenshots are only taken when you trigger a request. Data is processed directly with your API credentials or encrypted through your private proxy.</p>
+          </div>
+          <div class="border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
+            <h4 class="font-bold text-slate-900 font-manrope text-base mb-1">How do I cancel actions if Zuki does something unexpected?</h4>
+            <p class="text-slate-600 text-sm font-manrope">You can tap the <kbd class="px-1.5 py-0.5 bg-slate-100 border rounded font-mono text-xs">Esc</kbd> key 3 times at any moment to trigger an immediate hardware interrupt that freezes all mouse and keyboard actions.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="max-w-7xl mx-auto px-6 pt-12 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-slate-500 font-manrope">
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-slate-900">Zuki AI</span>
+          <span>© 2026 Zuki Project. All rights reserved.</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="https://github.com/I-m-a-m-4/zuki" class="hover:text-slate-900 transition-colors">GitHub</a>
+          <a href="#features" class="hover:text-slate-900 transition-colors">Features</a>
+          <a href="#pricing" class="hover:text-slate-900 transition-colors">Pricing</a>
+          <a href="mailto:belloimam431@gmail.com" class="hover:text-slate-900 transition-colors">Contact</a>
+        </div>
+      </footer>
+
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-container">
-      <div class="footer-left">
-        <div class="brand">
-          <span class="brand-icon">🧤</span>
-          <span class="brand-name">Zuki for Windows</span>
-        </div>
-        <p class="footer-copy">Released under the MIT License · Built for Windows with love.</p>
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noreferrer">GitHub Repository</a>
-        <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" rel="noreferrer">Releases</a>
-        <a href="https://github.com/I-m-a-m-4/zuki/blob/main/docs/USAGE.md" target="_blank" rel="noreferrer">Documentation</a>
-        <a href="https://github.com/I-m-a-m-4/zuki/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">Contributing</a>
-      </div>
-    </div>
-  </footer>
+  </main>
 
-  <script src="script.js"></script>
+  <!-- JAVASCRIPT FOR FLASHLIGHT CARDS, NAVBAR SCROLL & FLUTTERWAVE -->
+  <script>
+    // 1. Flashlight Card Mouse Tracking Effect
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.flashlight-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+        });
+      });
+
+      // 2. Navbar Scroll Transition
+      const nav = document.getElementById("navbar");
+      function handleScroll() {
+        if (window.scrollY > 20) {
+          nav.classList.remove('bg-[#020412]/20', 'backdrop-blur-md');
+          nav.classList.add('bg-[#060812]', 'shadow-lg');
+        } else {
+          nav.classList.add('bg-[#020412]/20', 'backdrop-blur-md');
+          nav.classList.remove('bg-[#060812]', 'shadow-lg');
+        }
+      }
+      window.addEventListener('scroll', handleScroll);
+      handleScroll();
+
+      // 3. Mobile Menu Toggle
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('nebula-internal-mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('flex');
+            menuIcon.classList.add('hidden');
+            closeIcon.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+          } else {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+            document.body.style.overflow = '';
+          }
+        });
+
+        // Close on link click
+        document.querySelectorAll('.mobile-link').forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+            document.body.style.overflow = '';
+          });
+        });
+      }
+    });
+
+    // 4. Flutterwave Inline Payment Handler
+    function openFlutterwaveCheckout() {
+      if (typeof FlutterwaveCheckout !== 'function') {
+        alert("Flutterwave SDK is initializing. Please try again in a few seconds.");
+        return;
+      }
+
+      FlutterwaveCheckout({
+        public_key: "FLWPUBK-33162c3bb2bb347a6606f3e44645f1c9-X",
+        tx_ref: "zuki-tx-" + Date.now(),
+        amount: 5000,
+        currency: "NGN",
+        payment_options: "card,banktransfer,ussd",
+        customer: {
+          email: "user@example.com",
+          phone_number: "08012345678",
+          name: "Zuki Early Adopter",
+        },
+        customizations: {
+          title: "Zuki Pro Subscription",
+          description: "Monthly subscription for Zuki AI Desktop Assistant",
+          logo: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/preview-images/nebulamax.png",
+        },
+        callback: function (data) {
+          console.log("Flutterwave payment callback:", data);
+          alert("Payment completed! Transaction status: " + data.status + "\nTxRef: " + data.tx_ref);
+        },
+        onclose: function () {
+          console.log("Flutterwave modal closed");
+        }
+      });
+    }
+  </script>
+
 </body>
 </html>
