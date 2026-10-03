@@ -14,7 +14,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install core + dev deps
-        run: pip install -e ".[dev]"
+        run: |
+          pip install -e ".[dev]"
+          pip install -r server/requirements.txt
       - name: Run the suite
         run: python -m pytest -q
       - name: Compile the shell (import-safety without a GUI)
