@@ -16,9 +16,10 @@ _USER_ENV = _USER_DIR / ".env"
 # Where runtime changes (provider switch, wizard-saved keys) are written.
 _WRITABLE_ENV = _USER_ENV if _FROZEN else (_HERE / ".env")
 
-# Load in priority order: bundled/dev first, then the user config dir (which
+_ROOT = _HERE.parent.parent
+# Load in priority order: repo root first, bundled/shell next, then user config dir (which
 # overrides — and is the only source in a frozen build). .env.local wins over .env.
-for _p in (_HERE / ".env", _HERE / ".env.local", _USER_ENV):
+for _p in (_ROOT / ".env", _ROOT / ".env.local", _HERE / ".env", _HERE / ".env.local", _USER_ENV):
     if _p.exists():
         load_dotenv(_p, override=True)
 
@@ -201,9 +202,12 @@ class Config:
             return "faster_whisper"
 
     def tts_provider(self) -> str:
+        forced = os.environ.get("ZUKI_TTS_PROVIDER", "").strip().lower()
+        if forced in ("edge_tts", "edge", "elevenlabs", "openai"):
+            return "edge_tts" if forced == "edge" else forced
         if self.elevenlabs_api_key:
             return "elevenlabs"
-        if self.openai_api_key:
+        if self.openai_api_key and not self.openai_api_key.startswith("sk-or-"):
             return "openai"
         return "edge_tts"
 

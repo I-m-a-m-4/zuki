@@ -241,14 +241,25 @@ class CompanionPanel(QWidget):
         self._response_label.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         self._response_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self._response_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        hk = cfg.hotkey.upper()
+        self._response_label.setText(
+            f"👋 Welcome to Zuki!\n\n"
+            f"Hold {hk} (or press the button below) and speak.\n\n"
+            f"• 'What's on my screen?'\n"
+            f"• 'Walk me through this app'\n"
+            f"• 'Clean up my desktop'"
+        )
         scroll.setWidget(self._response_label)
         root.addWidget(scroll, stretch=1)
 
         # Push-to-talk button
-        self._ptt_btn = QPushButton("Say 'Zuki' or hold Ctrl+Alt+M")
+        self._ptt_btn = QPushButton(f"Hold to Speak ({hk})")
         self._ptt_btn.setObjectName("hotkey_btn")
         self._ptt_btn.setFont(FONT_LABEL)
         self._ptt_btn.setFixedHeight(44)
+        self._ptt_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self._ptt_btn.pressed.connect(self.on_push_to_talk_pressed.emit)
+        self._ptt_btn.released.connect(self.on_push_to_talk_released.emit)
         root.addWidget(self._ptt_btn)
 
         # Footer: model selector + provider info
@@ -324,8 +335,16 @@ class CompanionPanel(QWidget):
         self._waveform.setVisible(state == AppState.LISTENING)
         if state == AppState.LISTENING:
             self._waveform.start()
+            self._ptt_btn.setText("Listening... (release when done)")
+        elif state == AppState.THINKING:
+            self._waveform.stop()
+            self._ptt_btn.setText("Thinking...")
+        elif state == AppState.SPEAKING:
+            self._waveform.stop()
+            self._ptt_btn.setText("Speaking...")
         else:
             self._waveform.stop()
+            self._ptt_btn.setText(f"Hold to Speak ({cfg.hotkey.upper()})")
 
     def update_response(self, text: str):
         """Append streaming text chunk."""

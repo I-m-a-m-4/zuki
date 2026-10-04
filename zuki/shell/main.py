@@ -125,6 +125,8 @@ def main():
     manager.sig_connect_prompt.connect(_on_connect_prompt)
 
     # Panel → Manager
+    panel.on_push_to_talk_pressed.connect(manager.on_hotkey_press)
+    panel.on_push_to_talk_released.connect(manager.on_hotkey_release)
     panel.on_model_changed.connect(manager.set_model)
 
     def _on_doc_dropped(path: str):
@@ -373,7 +375,9 @@ def main():
 
     # ── Show UI + start listener ──────────────────────────────────────────────
     overlay.show()        # persistent overlay (cursor follow)
-    # Panel is hidden by default — user can open it from the tray menu if needed
+    panel.show()          # Show companion front-end window on startup
+    panel.raise_()
+    panel.activateWindow()
     manager.start()        # begin ambient mic + wake-word scanning
 
     providers = cfg.describe()

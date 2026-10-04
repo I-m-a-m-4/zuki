@@ -844,13 +844,15 @@ class CompanionManager(RoutingMixin, TourMixin, ActionsMixin, QObject):
             # computer-use agent), a spoken screen walkthrough, or plain chat. This
             # is what kills the brittle "typed vs type" keyword matching.
             from ai import client_factory
-            if client_factory.has_claude():
-                # Instant local fast-path for the obvious cases; Haiku router only
-                # when it's genuinely ambiguous (hides the routing hop most turns).
-                fast = self._fast_route(transcript)
-                decision = {"route": fast} if fast else await self._route(transcript)
-                route = decision.get("route", "chat")
-                slog("ROUTE", f"-> {route}" + ("  (instant, forced)" if fast else "  (haiku)"))
+            fast = self._fast_route(transcript)
+            if fast:
+                decision = {"route": fast}
+            elif client_factory.has_claude():
+                decision = await self._route(transcript)
+            else:
+                decision = {"route": "chat"}
+            route = decision.get("route", "chat")
+            slog("ROUTE", f"-> {route}" + ("  (instant, forced)" if fast else "  (router)"))
                 # Instant audible ack on the SLOW routes — the real response takes
                 # seconds; a sub-second "On it!" makes the turn feel immediate.
                 if route in ("act", "walkthrough", "organize") and getattr(self, "_acks", None):

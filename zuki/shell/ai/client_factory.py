@@ -134,9 +134,21 @@ def make_async_client():
         if cached is not None:
             return cached
     secret, base = credential()
-    client = anthropic.AsyncAnthropic(
-        api_key=secret, base_url=base, http_client=_shared_http(),
-    )
+    try:
+        client = anthropic.AsyncAnthropic(
+            api_key=secret, base_url=base, http_client=_shared_http(),
+        )
+    except TypeError:
+        try:
+            import httpx2
+            client = anthropic.AsyncAnthropic(
+                api_key=secret, base_url=base,
+                http_client=httpx2.AsyncClient(timeout=httpx2.Timeout(60.0, connect=15.0)),
+            )
+        except Exception:
+            client = anthropic.AsyncAnthropic(
+                api_key=secret, base_url=base,
+            )
     with _lock:
         _async_sdk.clear()
         _async_sdk[gen] = client

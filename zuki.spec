@@ -20,7 +20,7 @@ datas, binaries, hiddenimports = [], [], []
 # Heavy/awkward third-party packages — grab data, DLLs, and submodules.
 for pkg in (
     "PyQt6", "sounddevice", "soundfile", "uiautomation", "comtypes",
-    "edge_tts", "faster_whisper", "av", "mss", "anthropic",
+    "edge_tts", "faster_whisper", "av", "mss", "anthropic", "openai", "httpx",
 ):
     try:
         d, b, h = collect_all(pkg)

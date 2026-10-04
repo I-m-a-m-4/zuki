@@ -12,9 +12,12 @@
 #    user's home instead — a valid, guard-passing location — so the guard is
 #    tested for real rather than worked around.
 
+import os
 from pathlib import Path
 
 
 def pytest_configure(config):
     if not config.option.basetemp:
-        config.option.basetemp = str(Path.home() / ".zuki-pytest-tmp")
+        p = Path(__file__).parent / ".pytest_temp" / f"run_{os.getpid()}"
+        p.mkdir(parents=True, exist_ok=True)
+        config.option.basetemp = str(p)

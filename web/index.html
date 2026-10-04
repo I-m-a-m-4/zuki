@@ -338,22 +338,21 @@
           </div>
         </div>
 
-        <a href="#architecture" class="hover:text-white transition-colors font-manrope">Architecture</a>
+        <a href="#how-it-works" class="hover:text-white transition-colors font-manrope">How It Works</a>
         <a href="#features" class="hover:text-white transition-colors font-manrope">Features</a>
         <a href="#pricing" class="hover:text-white transition-colors font-manrope">Pricing</a>
-        <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors font-manrope flex items-center gap-1.5">
-          GitHub
-          <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
+        <a href="#faq" class="hover:text-white transition-colors font-manrope">FAQ</a>
       </div>
 
-      <!-- Right Side CTA: Microsoft Store Button -->
+      <!-- Right Side CTA: Microsoft Store Button & Sign In -->
       <div class="flex gap-4 text-sm font-medium items-center">
-        <a href="#pricing" class="hidden sm:block hover:text-white transition-colors font-manrope">Sign in</a>
+        <button id="nav-signin-btn" onclick="openAuthModal()" class="hidden sm:flex items-center gap-1.5 hover:text-white transition-colors font-manrope text-slate-300">
+          <svg class="w-4 h-4 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span id="nav-user-label">Sign in</span>
+        </button>
         
         <!-- Microsoft Store Navbar Button -->
         <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" class="hover:bg-white/15 transition-all text-white font-manrope bg-white/10 border border-white/10 rounded-full py-1.5 px-4 shadow-sm flex items-center gap-2.5">
@@ -384,10 +383,10 @@
       <div id="nebula-internal-mobile-menu" class="fixed inset-x-0 top-[64px] z-40 h-[calc(100vh-64px)] bg-[#020412]/95 backdrop-blur-3xl hidden md:hidden flex-col px-6 pb-12 overflow-y-auto">
         <div class="flex flex-col gap-6 text-lg font-medium text-slate-300 pt-6">
           <a href="#how-it-works" class="hover:text-white transition-colors font-manrope mobile-link">How it Works</a>
-          <a href="#architecture" class="hover:text-white transition-colors font-manrope mobile-link">Architecture</a>
           <a href="#features" class="hover:text-white transition-colors font-manrope mobile-link">Features</a>
           <a href="#pricing" class="hover:text-white transition-colors font-manrope mobile-link">Pricing</a>
-          <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="hover:text-white transition-colors font-manrope">GitHub Repository</a>
+          <a href="#faq" class="hover:text-white transition-colors font-manrope mobile-link">FAQ</a>
+          <button onclick="openAuthModal(); toggleMobileMenu();" class="text-left hover:text-white transition-colors font-manrope">Account & Sign In</button>
           <div class="h-px bg-white/10 w-full my-2"></div>
           <a href="https://github.com/I-m-a-m-4/zuki/releases" class="w-full text-center py-3 rounded-full bg-white text-slate-900 font-semibold font-manrope flex items-center justify-center gap-2">
             <div class="grid grid-cols-2 gap-0.5 w-4 h-4">
@@ -752,11 +751,11 @@
 
           <!-- Bottom Floating Pill -->
           <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-            <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="flex items-center gap-2 bg-white text-slate-900 text-xs px-5 py-2.5 rounded-full hover:bg-slate-100 transition-all shadow-2xl shadow-indigo-500/30 ring-4 ring-black/40 font-manrope font-bold">
-              <svg class="w-3.5 h-3.5 text-indigo-600 fill-current" viewBox="0 0 24 24">
+            <a href="#pricing" class="flex items-center gap-2 bg-white text-slate-900 text-xs px-5 py-2.5 rounded-full hover:bg-slate-100 transition-all shadow-2xl shadow-orange-500/20 ring-4 ring-black/40 font-manrope font-bold">
+              <svg class="w-3.5 h-3.5 text-orange-500 fill-current" viewBox="0 0 24 24">
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
-              <span>Explore GitHub Repository</span>
+              <span>Explore Features & Plans</span>
             </a>
           </div>
 
@@ -828,12 +827,14 @@
             <span>Flutterwave Payments</span>
           </div>
 
-          <!-- GitHub -->
+          <!-- Deepgram Voice AI -->
           <div class="flex items-center gap-2 font-bold text-slate-800 text-sm font-manrope">
-            <svg class="w-5 h-5 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            <svg class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" y2="22" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <span>Open Source Repository</span>
+            <span>Deepgram Voice AI</span>
           </div>
         </div>
       </div>
@@ -1026,24 +1027,24 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <!-- Free Plan -->
+          <!-- Starter Plan -->
           <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-slate-900 font-manrope">Community Edition</h3>
-                <span class="text-xs font-mono bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full">Open Source</span>
+                <h3 class="text-xl font-bold text-slate-900 font-manrope">Starter Edition</h3>
+                <span class="text-xs font-mono bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">Free Trial</span>
               </div>
-              <p class="text-slate-600 text-sm mb-6 font-manrope">Bring your own Anthropic & Groq API keys. Unlimited local actions on your Windows machine.</p>
+              <p class="text-slate-600 text-sm mb-6 font-manrope">Get started with native voice commands and autonomous desktop actions on your Windows PC.</p>
               
               <div class="mb-6">
                 <span class="text-4xl font-extrabold text-slate-900 font-manrope">₦0</span>
-                <span class="text-slate-500 font-manrope"> / forever free</span>
+                <span class="text-slate-500 font-manrope"> / 14-day trial</span>
               </div>
 
               <div class="space-y-3 mb-8 text-sm text-slate-700 font-manrope">
                 <div class="flex items-center gap-2.5">
                   <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Full Windows Desktop Client</span>
+                  <span>Full Windows Desktop App</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                   <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1051,18 +1052,18 @@
                 </div>
                 <div class="flex items-center gap-2.5">
                   <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Bring Your Own API Keys (BYOK)</span>
+                  <span>Smart Desktop Organizer & Safe Actions</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                   <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Zero Telemetry / 100% Local SQLite</span>
+                  <span>Zero Telemetry / 100% Local PC Security</span>
                 </div>
               </div>
             </div>
 
-            <a href="https://github.com/I-m-a-m-4/zuki" target="_blank" class="w-full text-center py-3.5 rounded-full border border-slate-300 text-slate-800 font-semibold font-manrope hover:bg-slate-100 transition-colors">
-              Clone on GitHub
-            </a>
+            <button onclick="openAuthModal()" class="w-full text-center py-3.5 rounded-full border border-slate-300 text-slate-800 font-semibold font-manrope hover:bg-slate-100 transition-colors">
+              Get Started Free
+            </button>
           </div>
 
           <!-- Pro Plan (Flutterwave Integrated) -->
@@ -1114,20 +1115,35 @@
         </div>
       </section>
 
-      <!-- QUICK INSTALLATION CODE -->
+      <!-- GETTING STARTED IN 3 STEPS -->
       <section class="max-w-4xl mx-auto px-6 mb-32">
-        <div class="bg-[#0B0D15] rounded-2xl p-6 border border-white/10 text-white">
-          <div class="flex justify-between items-center mb-4">
-            <span class="text-xs font-mono text-slate-400">Run locally from source</span>
-            <span class="text-xs text-indigo-400 font-mono">Powershell / CMD</span>
+        <div class="bg-gradient-to-b from-[#0e1220] to-[#080a14] rounded-3xl p-8 md:p-10 border border-white/10 text-white shadow-2xl relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="text-center max-w-xl mx-auto mb-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20 font-manrope">Fast Setup</span>
+            <h3 class="text-2xl md:text-3xl font-extrabold text-white mt-3 font-manrope">Up and running in 3 simple steps</h3>
+            <p class="text-slate-400 text-sm mt-2 font-manrope">No technical configuration needed. Built for everyday Windows users.</p>
           </div>
-          <div class="bg-black/60 rounded-xl p-4 font-mono text-sm text-slate-300 space-y-2 overflow-x-auto">
-            <div><span class="text-slate-500"># 1. Clone the repository</span></div>
-            <div class="text-cyan-400">git clone https://github.com/I-m-a-m-4/zuki.git</div>
-            <div><span class="text-slate-500"># 2. Install dependencies</span></div>
-            <div class="text-cyan-400">cd zuki && pip install -r requirements.txt</div>
-            <div><span class="text-slate-500"># 3. Launch desktop companion</span></div>
-            <div class="text-emerald-400">python -m zuki.shell.main</div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-orange-500/30 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 font-bold flex items-center justify-center font-manrope text-lg mb-4">1</div>
+              <h4 class="font-bold text-white font-manrope text-base mb-2">Get the App</h4>
+              <p class="text-slate-400 text-xs leading-relaxed font-manrope">Download Zuki from the Microsoft Store or your direct Windows installer package.</p>
+            </div>
+
+            <div class="bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-orange-500/30 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center font-manrope text-lg mb-4">2</div>
+              <h4 class="font-bold text-white font-manrope text-base mb-2">Sign In Once</h4>
+              <p class="text-slate-400 text-xs leading-relaxed font-manrope">Log in with your account to unlock your cloud brain and daily requests seamlessly.</p>
+            </div>
+
+            <div class="bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-orange-500/30 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center font-manrope text-lg mb-4">3</div>
+              <h4 class="font-bold text-white font-manrope text-base mb-2">Press & Speak</h4>
+              <p class="text-slate-400 text-xs leading-relaxed font-manrope">Tap <kbd class="px-1.5 py-0.5 bg-white/10 rounded font-mono text-[11px] text-orange-300">Ctrl + Alt + M</kbd> anywhere on Windows and speak naturally to control your PC.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -1169,7 +1185,7 @@
             <div>
               <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono">Available on Microsoft Store</span>
               <h3 class="text-2xl md:text-3xl font-extrabold text-white mt-2 font-manrope">Ready to experience voice AI on your Windows PC?</h3>
-              <p class="text-slate-300 text-sm md:text-base mt-2 font-manrope">Download Zuki from the Microsoft Store or clone the open-source repository today.</p>
+              <p class="text-slate-300 text-sm md:text-base mt-2 font-manrope">Download Zuki from the Microsoft Store today and transform how you work on Windows.</p>
             </div>
             <div class="flex-shrink-0">
               <a href="https://github.com/I-m-a-m-4/zuki/releases" target="_blank" class="bg-white hover:bg-slate-100 text-slate-900 rounded-2xl py-3 px-6 shadow-xl transition-all flex items-center gap-3 font-manrope font-bold">
@@ -1194,7 +1210,7 @@
               <span>© 2026 Zuki Project. All rights reserved.</span>
             </div>
             <div class="flex items-center gap-6 font-medium">
-              <a href="https://github.com/I-m-a-m-4/zuki" class="hover:text-white transition-colors">GitHub</a>
+              <button onclick="openAuthModal()" class="hover:text-white transition-colors">Sign In</button>
               <a href="#features" class="hover:text-white transition-colors">Features</a>
               <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
               <a href="mailto:belloimam431@gmail.com" class="hover:text-white transition-colors">Contact</a>
@@ -1305,7 +1321,175 @@
         }
       });
     }
+
+    // 5. User Account & Sign In Modal Handlers
+    let currentAuthTab = 'signin';
+
+    function openAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderAuthState();
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function switchAuthTab(tab) {
+      currentAuthTab = tab;
+      const tabSignIn = document.getElementById('tab-signin');
+      const tabSignUp = document.getElementById('tab-signup');
+      const nameGroup = document.getElementById('name-field-group');
+      const submitBtn = document.getElementById('auth-submit-btn');
+
+      if (tab === 'signin') {
+        tabSignIn.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg bg-orange-500 text-white font-manrope transition-all';
+        tabSignUp.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white font-manrope transition-all';
+        if (nameGroup) nameGroup.classList.add('hidden');
+        if (submitBtn) submitBtn.innerText = 'Sign In';
+      } else {
+        tabSignUp.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg bg-orange-500 text-white font-manrope transition-all';
+        tabSignIn.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white font-manrope transition-all';
+        if (nameGroup) nameGroup.classList.remove('hidden');
+        if (submitBtn) submitBtn.innerText = 'Create Account';
+      }
+    }
+
+    function renderAuthState() {
+      const stored = localStorage.getItem('zuki_user');
+      const formView = document.getElementById('auth-form-view');
+      const profileView = document.getElementById('auth-profile-view');
+      const userLabel = document.getElementById('nav-user-label');
+
+      if (stored) {
+        try {
+          const user = JSON.parse(stored);
+          if (formView) formView.classList.add('hidden');
+          if (profileView) profileView.classList.remove('hidden');
+          const emailDisplay = document.getElementById('user-email-display');
+          if (emailDisplay) emailDisplay.innerText = user.email || 'user@zuki.ai';
+          if (userLabel) userLabel.innerText = user.name ? user.name.split(' ')[0] : 'Account';
+        } catch(e) {}
+      } else {
+        if (formView) formView.classList.remove('hidden');
+        if (profileView) profileView.classList.add('hidden');
+        if (userLabel) userLabel.innerText = 'Sign in';
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const name = document.getElementById('auth-name') ? document.getElementById('auth-name').value : '';
+      const dummyUser = { email: email, name: name || email.split('@')[0], plan: 'Pro' };
+      localStorage.setItem('zuki_user', JSON.stringify(dummyUser));
+      renderAuthState();
+    }
+
+    function handleGoogleSignIn() {
+      const dummyUser = { email: 'google.user@gmail.com', name: 'Google User', plan: 'Pro' };
+      localStorage.setItem('zuki_user', JSON.stringify(dummyUser));
+      renderAuthState();
+    }
+
+    function handleSignOut() {
+      localStorage.removeItem('zuki_user');
+      renderAuthState();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAuthState();
+    });
   </script>
 
+  <!-- AUTH / SIGN IN MODAL -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all duration-300">
+    <div class="relative w-full max-w-md bg-[#0b0e1b] border border-white/15 rounded-3xl p-8 shadow-2xl text-white transform transition-all">
+      <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl overflow-hidden p-[1px] bg-gradient-to-tr from-orange-600 to-amber-500 shadow-md">
+          <img src="logo.png" alt="Zuki Logo" class="w-full h-full object-cover rounded-[9px]">
+        </div>
+        <div>
+          <h3 class="font-manrope font-bold text-lg text-white">Zuki Account</h3>
+          <p class="text-xs text-slate-400 font-manrope">Sign in to sync your subscription & license</p>
+        </div>
+      </div>
+
+      <div id="auth-profile-view" class="hidden space-y-4">
+        <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-2">
+          <div class="flex justify-between items-center text-xs text-slate-400">
+            <span>Signed in as</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-semibold font-mono">Active</span>
+          </div>
+          <div id="user-email-display" class="font-semibold text-white font-manrope text-sm truncate">user@example.com</div>
+          <div class="text-xs text-slate-400 pt-2 border-t border-white/10 flex justify-between">
+            <span>Plan: <strong class="text-orange-400 font-normal">Zuki Pro Cloud</strong></span>
+            <span>Usage: <strong class="text-slate-300 font-normal">Active today</strong></span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 pt-2">
+          <a href="#pricing" onclick="closeAuthModal()" class="w-full text-center py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold font-manrope text-sm hover:opacity-90 transition-opacity">
+            Manage Subscription
+          </a>
+          <button onclick="handleSignOut()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white font-semibold font-manrope text-sm transition-colors">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      <div id="auth-form-view">
+        <div class="flex rounded-xl bg-white/5 p-1 mb-6 border border-white/10">
+          <button id="tab-signin" onclick="switchAuthTab('signin')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-orange-500 text-white font-manrope transition-all">Sign In</button>
+          <button id="tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white font-manrope transition-all">Create Account</button>
+        </div>
+
+        <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+          <div id="name-field-group" class="hidden">
+            <label class="block text-xs font-medium text-slate-300 mb-1.5 font-manrope">Full Name</label>
+            <input type="text" id="auth-name" placeholder="John Doe" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors font-manrope">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5 font-manrope">Email Address</label>
+            <input type="email" id="auth-email" required placeholder="you@example.com" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors font-manrope">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5 font-manrope">Password</label>
+            <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors font-manrope">
+          </div>
+
+          <button type="submit" id="auth-submit-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold font-manrope text-sm hover:opacity-95 shadow-lg shadow-orange-500/25 transition-all">
+            Sign In
+          </button>
+        </form>
+
+        <div class="relative my-6 text-center">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+          <span class="relative px-3 bg-[#0b0e1b] text-xs text-slate-500 font-manrope">or continue with</span>
+        </div>
+
+        <button onclick="handleGoogleSignIn()" type="button" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-white text-sm font-semibold font-manrope flex items-center justify-center gap-2.5 transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
