@@ -1,0 +1,19 @@
+{
+  "name": "zuki",
+  "version": "0.2.1",
+  "description": "Zuki Desktop Companion & Web Dashboard",
+  "scripts": {
+    "dev": "python -m http.server 3000 --bind 127.0.0.1",
+    "serve": "python -m http.server 3000 --bind 127.0.0.1",
+    "start": "start.bat",
+    "server": "python -m uvicorn server.main:app --host 127.0.0.1 --port 8787 --reload"
+  },
+  "keywords": [
+    "ai",
+    "windows",
+    "agent",
+    "desktop-companion"
+  ],
+  "author": "Zuki AI",
+  "license": "MIT"
+}
