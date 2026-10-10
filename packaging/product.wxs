@@ -1,7 +1,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="Zuki"
            Manufacturer="Zuki AI"
-           Version="0.2.0"
+           Version="0.2.1"
            UpgradeCode="4F8E5A7B-3C2D-4E1F-9A8B-7C6D5E4F3A2B"
            Scope="perUserOrMachine">
     <MajorUpgrade DowngradeErrorMessage="A newer version of Zuki is already installed." />

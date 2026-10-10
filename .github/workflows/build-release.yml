@@ -40,7 +40,7 @@ jobs:
           choco install innosetup --no-progress
           $iscc = (Get-ChildItem -Path "C:\Program Files*", "C:\ProgramData\chocolatey" -Filter "ISCC.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
           if (-not $iscc) { $iscc = "iscc" }
-          & $iscc zuki/shell/installer.iss
+          & $iscc zuki/shell/installer.iss /O"dist"
 
       - name: Compile WiX Installer (.msi)
         run: |

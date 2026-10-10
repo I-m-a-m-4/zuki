@@ -17,7 +17,16 @@
 #define MyAppURL         "https://github.com/I-m-a-m-4/zuki"
 #define MyAppExeName     "Zuki.exe"
 
+#if FileExists("..\..\dist\Zuki\Zuki.exe")
+  #define RepoRoot "..\.."
+#elif FileExists("dist\Zuki\Zuki.exe")
+  #define RepoRoot "."
+#else
+  #define RepoRoot "..\.."
+#endif
+
 [Setup]
+SourceDir={#RepoRoot}
 AppId={{9A4E3F2C-7B1D-4A8F-9C6E-3D7F1B5E9A0C}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
@@ -40,6 +49,8 @@ ArchitecturesInstallIn64BitMode=x64compatible
 UninstallDisplayIcon={app}\{#MyAppExeName}
 #if FileExists("assets\icon.ico")
   SetupIconFile=assets\icon.ico
+#elif FileExists("zuki\shell\assets\icon.ico")
+  SetupIconFile=zuki\shell\assets\icon.ico
 #endif
 
 [Languages]
