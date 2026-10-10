@@ -8,9 +8,7 @@
     <MediaTemplate EmbedCab="yes" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="INSTALLFOLDER" Name="Zuki">
-        <Files Include="..\dist\Zuki\**" />
-      </Directory>
+      <Directory Id="INSTALLFOLDER" Name="Zuki" />
     </StandardDirectory>
 
     <StandardDirectory Id="ProgramMenuFolder">
@@ -24,8 +22,12 @@
       </Component>
     </StandardDirectory>
 
-    <Feature Id="MainFeature" Title="Zuki" Level="1">
+    <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
       <Files Include="..\dist\Zuki\**" />
+    </ComponentGroup>
+
+    <Feature Id="MainFeature" Title="Zuki" Level="1">
+      <ComponentGroupRef Id="AppComponents" />
       <ComponentRef Id="ApplicationShortcut" />
     </Feature>
   </Package>
