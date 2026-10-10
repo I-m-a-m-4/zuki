@@ -44,7 +44,7 @@ jobs:
 
       - name: Compile WiX Installer (.msi)
         run: |
-          dotnet tool install --global wix
+          dotnet tool install --global wix --version 5.0.2
           $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
           wix build packaging/product.wxs -o dist/Zuki.msi
 
